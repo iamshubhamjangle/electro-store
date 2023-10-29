@@ -15,6 +15,5 @@ yarn remove lodash              # Remove a package
 To learn more about Next.js, take a look at the following resources:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- [Shadcn Documentation](https://ui.shadcn.com/docs) - learn about Shadcn UI library.
+- [NextAuth](https://next-auth.js.org/getting-started/introduction) - Authentication Library for Next.js
