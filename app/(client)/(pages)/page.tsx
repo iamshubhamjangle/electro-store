@@ -1,3 +1,9 @@
+import { HeroSection } from "@/app/(client)/_components/exports";
+
 export default function Home() {
-  return <main>Body</main>;
+  return (
+    <main>
+      <HeroSection />
+    </main>
+  );
 }
