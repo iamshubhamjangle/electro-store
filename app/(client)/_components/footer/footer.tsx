@@ -62,8 +62,8 @@ const Footer = () => {
   ];
 
   return (
-    <>
-      <div className="flex flex-wrap justify-center gap-40 mt-20">
+    <div className="border border-t">
+      <div className="flex flex-wrap justify-center gap-40 mt-10">
         {data?.map((item, idx) => {
           return (
             <div key={idx} className="flex flex-col gap-3">
@@ -80,7 +80,7 @@ const Footer = () => {
       <div className="text-center text-sm font-medium my-10">
         © 2023, Electro Shop, Inc.
       </div>
-    </>
+    </div>
   );
 };
 
