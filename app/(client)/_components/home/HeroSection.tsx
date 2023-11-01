@@ -13,7 +13,7 @@ import "swiper/css/autoplay";
 
 const HeroSection = () => {
   return (
-    <div className="h-[70vh] w-full">
+    <div className="w-full rounded-lg overflow-clip">
       <Swiper
         modules={[Pagination, Autoplay, A11y]}
         spaceBetween={0}
@@ -23,24 +23,50 @@ const HeroSection = () => {
         autoplay={true}
       >
         <SwiperSlide>
-          <div className="h-[70vh]">
-            <Image alt="bannerImage" src={"/banner1.jpg"} fill />
-          </div>
+          <Image
+            alt="bannerImage"
+            src={"/banner5.png"}
+            width={1200}
+            height={600}
+            className="mx-auto"
+            style={{ objectFit: "cover", width: "100%" }}
+          />
         </SwiperSlide>
         <SwiperSlide>
-          <div className="h-[70vh]">
-            <Image alt="bannerImage" src={"/banner2.jpg"} fill />
-          </div>
+          <Image
+            alt="bannerImage"
+            src={"/banner2.png"}
+            width={1200}
+            height={600}
+            style={{ objectFit: "cover", width: "100%" }}
+          />
         </SwiperSlide>
         <SwiperSlide>
-          <div className="h-[70vh]">
-            <Image alt="bannerImage" src={"/banner3.jpg"} fill />
-          </div>
+          <Image
+            alt="bannerImage"
+            src={"/banner3.png"}
+            width={1200}
+            height={600}
+            style={{ objectFit: "cover", width: "100%" }}
+          />
         </SwiperSlide>
         <SwiperSlide>
-          <div className="h-[70vh]">
-            <Image alt="bannerImage" src={"/banner4.jpg"} fill />
-          </div>
+          <Image
+            alt="bannerImage"
+            src={"/banner4.png"}
+            width={1200}
+            height={600}
+            style={{ objectFit: "cover", width: "100%" }}
+          />
+        </SwiperSlide>
+        <SwiperSlide>
+          <Image
+            alt="bannerImage"
+            src={"/banner1.png"}
+            width={1200}
+            height={600}
+            style={{ objectFit: "cover", width: "100%" }}
+          />
         </SwiperSlide>
       </Swiper>
     </div>

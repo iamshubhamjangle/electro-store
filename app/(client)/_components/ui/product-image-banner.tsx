@@ -6,23 +6,23 @@ const ProductImageBanner = () => {
       <Image
         className="rounded-md object-cover"
         alt="Samsung Galaxy S21 FE 5G"
-        src="/headphones.png"
-        width={400}
-        height={200}
+        src="/card_headphones.png"
+        width={500}
+        height={300}
       />
       <Image
         className="rounded-md object-cover"
         alt="Samsung Galaxy S21 FE 5G"
-        src="/skincare.png"
-        width={400}
-        height={200}
+        src="/card_watch.png"
+        width={500}
+        height={300}
       />
       <Image
         className="rounded-md object-cover"
         alt="Samsung Galaxy S21 FE 5G"
-        src="/shoes.png"
-        width={400}
-        height={200}
+        src="/card_laptop.png"
+        width={500}
+        height={300}
       />
     </div>
   );
