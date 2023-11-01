@@ -1,12 +1,8 @@
-import {
-  ScrollArea,
-  ScrollBar,
-} from "@/app/(client)/_components/ui/scroll-area";
 import Image from "next/image";
 
 const ProductImageList = () => {
   return (
-    <ScrollArea>
+    <div className="relative overflow-auto pb-2">
       <div className="flex space-x-10">
         <Image
           className="rounded-md object-cover"
@@ -65,8 +61,7 @@ const ProductImageList = () => {
           height={300}
         />
       </div>
-      <ScrollBar orientation="horizontal" />
-    </ScrollArea>
+    </div>
   );
 };
 

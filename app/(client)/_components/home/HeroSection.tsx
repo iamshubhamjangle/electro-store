@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, A11y } from "swiper/modules";
@@ -16,23 +18,29 @@ const HeroSection = () => {
         modules={[Pagination, Autoplay, A11y]}
         spaceBetween={0}
         slidesPerView={1}
-        onSlideChange={() => console.log("slide change")}
-        onSwiper={(swiper) => console.log(swiper)}
         pagination={{ clickable: true }}
         loop={true}
         autoplay={true}
       >
         <SwiperSlide>
-          <div className="bg-slate-300 h-[70vh]"></div>
+          <div className="h-[70vh]">
+            <Image alt="bannerImage" src={"/banner1.jpg"} fill />
+          </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="bg-red-300 h-[70vh]"></div>
+          <div className="h-[70vh]">
+            <Image alt="bannerImage" src={"/banner2.jpg"} fill />
+          </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="bg-green-300 h-[70vh]"></div>
+          <div className="h-[70vh]">
+            <Image alt="bannerImage" src={"/banner3.jpg"} fill />
+          </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="bg-cyan-300 h-[70vh]"></div>
+          <div className="h-[70vh]">
+            <Image alt="bannerImage" src={"/banner4.jpg"} fill />
+          </div>
         </SwiperSlide>
       </Swiper>
     </div>
