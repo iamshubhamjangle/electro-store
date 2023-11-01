@@ -1,17 +1,15 @@
 import { HeroSection } from "@/app/(client)/_components/exports";
 import ProductItemList from "@/app/(client)/_components/ui/product-item-list";
 import ContentRow from "@/app/(client)/_components/home/ContentRow";
-import ProductImageList from "@/app/(client)/_components/ui/product-image-list";
-import ProductImageBanner from "../_components/ui/product-image-banner";
+import ProductImageBanner from "@/app/(client)/_components/ui/product-image-banner";
+import Categories from "@/app/(client)/_components/home/Categories";
 
 export default function Home() {
   return (
     <main className="container max-w-7xl">
       <HeroSection />
       <div className="space-y-16 my-16">
-        <ContentRow title="Shop our top categories">
-          <ProductImageList />
-        </ContentRow>
+        <Categories />
         <ContentRow title="Top Deals">
           <ProductImageBanner />
         </ContentRow>
