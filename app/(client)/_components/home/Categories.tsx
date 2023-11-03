@@ -1,26 +1,9 @@
 import ContentRow from "@/app/(client)/_components/home/ContentRow";
 import ProductImageList from "@/app/(client)/_components/ui/product-image-list";
-
-async function getData() {
-  const res = await fetch(
-    `${process.env.BACKEND_ENDPOINT}/api/categories?populate=image`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${process.env.BACKEND_PUBLIC_TOKEN}`,
-      },
-    }
-  );
-
-  if (!res.ok) {
-    console.log("Error while fetching data: getData()");
-  }
-
-  return res.json();
-}
+import fetcher from "@/app/_lib/fetcher";
 
 const Categories = async () => {
-  const data = await getData();
+  const data = await fetcher("/api/categories?populate=image").catch((e) => {});
 
   return (
     <ContentRow title="Shop our top categories">
