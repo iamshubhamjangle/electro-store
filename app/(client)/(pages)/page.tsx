@@ -1,9 +1,8 @@
 import { HeroSection } from "@/app/(client)/_components/exports";
-import ProductItemList from "@/app/(client)/_components/ui/product-item-list";
-import ContentRow from "@/app/(client)/_components/home/ContentRow";
 import Categories from "@/app/(client)/_components/home/Categories";
 import TopDeals from "@/app/(client)/_components/home/TopDeals";
 import DiscountedDeals from "@/app/(client)/_components/home/DiscountedDeals";
+import TrendingDeals from "@/app/(client)/_components/home/TrendingDeals";
 
 export default function Home() {
   return (
@@ -13,9 +12,7 @@ export default function Home() {
         <Categories />
         <TopDeals />
         <DiscountedDeals />
-        <ContentRow title="Trending Deals">
-          <ProductItemList />
-        </ContentRow>
+        <TrendingDeals />
       </div>
     </main>
   );

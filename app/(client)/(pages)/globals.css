@@ -86,3 +86,13 @@
   background-color: rgb(200, 200, 200);
   border-radius: 10px;
 }
+
+.wrapToTwoLines {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  line-height: 1.5; /* fallback */
+  max-height: 1.5 * 2; /* fallback */
+}
