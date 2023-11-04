@@ -68,8 +68,8 @@ const Footer = () => {
           return (
             <div key={idx} className="flex flex-col gap-3">
               <h6 className="uppercase font-bold">{item.header}</h6>
-              {item?.links?.map((link) => (
-                <a key={link.href} className="text-sm" href={link.href}>
+              {item?.links?.map((link, idx) => (
+                <a key={idx} className="text-sm" href={link.href}>
                   {link.title}
                 </a>
               ))}

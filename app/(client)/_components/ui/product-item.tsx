@@ -1,8 +1,8 @@
 import { cn } from "@/app/_lib/utils";
-import { ShoppingCart, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import Image from "next/image";
-import { Button } from "./button";
 import Link from "next/link";
+import ProductItemAddToCart from "./product-item-action-add";
 
 interface ProductItemProps extends React.HTMLAttributes<HTMLDivElement> {
   productId: number;
@@ -32,14 +32,14 @@ const ProductItem = ({
   ...props
 }: ProductItemProps) => {
   return (
-    <Link href={`/${productId}`}>
-      <div
-        className={cn(
-          "hover:border hover:border-slate-200 p-2 cursor-pointer w-[230px]",
-          className
-        )}
-        {...props}
-      >
+    <div
+      className={cn(
+        "hover:border hover:border-slate-200 p-2 w-[230px]",
+        className
+      )}
+      {...props}
+    >
+      <Link href={`/${productId}`}>
         <Image
           src={`${process.env.BACKEND_ENDPOINT}${imgSrc}`}
           alt={name}
@@ -73,15 +73,12 @@ const ProductItem = ({
               </span>
             </div>
           </div>
-          <div>
-            <Button variant="outline" className="rounded-full w-full ">
-              <ShoppingCart className="w-4 h-4 mr-2" />
-              <span className="font-medium">Add to Cart</span>
-            </Button>
-          </div>
         </div>
+      </Link>
+      <div className="mt-2">
+        <ProductItemAddToCart />
       </div>
-    </Link>
+    </div>
   );
 };
 
