@@ -1,8 +1,10 @@
-import { HeroSection } from "@/app/(client)/_components/exports";
-import Categories from "@/app/(client)/_components/home/Categories";
-import TopDeals from "@/app/(client)/_components/home/TopDeals";
-import DiscountedDeals from "@/app/(client)/_components/home/DiscountedDeals";
-import TrendingDeals from "@/app/(client)/_components/home/TrendingDeals";
+import {
+  Categories,
+  DiscountedDeals,
+  HeroSection,
+  TopDeals,
+  TrendingDeals,
+} from "@/app/(client)/_components/home";
 
 export default function Home() {
   return (
