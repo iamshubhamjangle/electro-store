@@ -1,29 +1,32 @@
 import Image from "next/image";
+import Link from "next/link";
 
-const ProductImageBanner = () => {
+interface ProductImageBannerProps {
+  data: any;
+}
+
+const ProductImageBanner: React.FC<ProductImageBannerProps> = ({ data }) => {
   return (
     <div className="grid grid-cols-3 gap-4 relative">
-      <Image
-        className="rounded-md object-cover"
-        alt="Samsung Galaxy S21 FE 5G"
-        src="/card_headphones.png"
-        width={500}
-        height={300}
-      />
-      <Image
-        className="rounded-md object-cover"
-        alt="Samsung Galaxy S21 FE 5G"
-        src="/card_watch.png"
-        width={500}
-        height={300}
-      />
-      <Image
-        className="rounded-md object-cover"
-        alt="Samsung Galaxy S21 FE 5G"
-        src="/card_laptop.png"
-        width={500}
-        height={300}
-      />
+      {data?.data?.map((item: any, idx: number) => {
+        return (
+          <Link href={item?.attributes?.redirectUrl || "#"} key={idx}>
+            <Image
+              className="rounded-md object-cover"
+              alt={
+                item?.attributes?.image?.data?.attributes?.alternativeText || ""
+              }
+              src={
+                item?.attributes?.image?.data?.attributes?.url
+                  ? `${process.env.BACKEND_ENDPOINT}${item?.attributes?.image?.data?.attributes?.url}`
+                  : "/grey.jpg"
+              }
+              width={500}
+              height={300}
+            />
+          </Link>
+        );
+      })}
     </div>
   );
 };
