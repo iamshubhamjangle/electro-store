@@ -3,6 +3,7 @@ import { ShoppingCart } from "lucide-react";
 
 import Search from "./search";
 import UserNav from "./user-nav";
+import Link from "next/link";
 
 const Nav = () => {
   return (
@@ -27,9 +28,9 @@ const MainNav = () => {
   return (
     <div className="container max-w-7xl">
       <div className="flex justify-between items-center gap-16 p-3">
-        <div>
+        <Link href={"/"}>
           <Image src={"/logo_light.png"} alt="logo" width={100} height={100} />
-        </div>
+        </Link>
         <div className="flex-1">
           <Search />
         </div>
