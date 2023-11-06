@@ -35,7 +35,7 @@ const MainNav = () => {
           <Search />
         </div>
         <div className="flex gap-4 font-semibold">
-          <NavMenuItem title="Cart" Icon={ShoppingCart} />
+          <MyCart title="Cart" Icon={ShoppingCart} />
           <UserNav />
         </div>
       </div>
@@ -43,11 +43,11 @@ const MainNav = () => {
   );
 };
 
-const NavMenuItem = ({ title, Icon }: any) => {
+const MyCart = ({ title, Icon }: any) => {
   return (
     <span className="flex gap-1 items-center text-slate-700">
       {Icon && <Icon className="w-5 h-5" />}
-      <span>{title}</span>
+      <span>{title} (0)</span>
     </span>
   );
 };
