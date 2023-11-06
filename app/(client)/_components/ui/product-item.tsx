@@ -52,7 +52,7 @@ const ProductItem = ({
             <h3 className="font-bold leading-none">{name}</h3>
           </div>
           <div className="">
-            <p className="text-xs font-medium text-muted-foreground wrapToTwoLines">
+            <p className="text-xs font-medium text-muted-foreground wrap-lines-2">
               {description}
             </p>
           </div>
