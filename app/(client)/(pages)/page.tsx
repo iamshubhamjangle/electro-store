@@ -4,6 +4,7 @@ import {
   HeroSection,
   TopDeals,
   TrendingDeals,
+  ViewAllProducts,
 } from "@/app/(client)/_components/home";
 
 export default function Home() {
@@ -15,6 +16,7 @@ export default function Home() {
         <TopDeals />
         <DiscountedDeals />
         <TrendingDeals />
+        <ViewAllProducts />
       </div>
     </main>
   );
