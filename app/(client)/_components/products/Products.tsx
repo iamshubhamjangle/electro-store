@@ -36,9 +36,9 @@ const Products: React.FC<ProductsProps> = ({
 
     if (offers) {
       if (offers === "30")
-        offersFilter = `&filters[traits][$eq][2]=ON_DEAL_30%`;
+        offersFilter = `&filters[traits][type][$eq][2]=ON_DEAL_30%`;
       else if (offers === "60")
-        offersFilter = `&filters[traits][$eq][2]=ON_DEAL_60%`;
+        offersFilter = `&filters[traits][type][$eq][2]=ON_DEAL_60%`;
     }
 
     // GET /api/articles?sort[0]=title:asc&sort[1]=slug:desc

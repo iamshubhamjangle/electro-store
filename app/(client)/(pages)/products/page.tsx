@@ -35,7 +35,7 @@ const Page = () => {
           offers={offers}
           sortby={sortby}
         />
-        <TrendingDealsInCategory />
+        <TrendingDealsInCategory category={category} />
       </div>
     </main>
   );
