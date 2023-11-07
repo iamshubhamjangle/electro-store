@@ -1,16 +1,19 @@
 type HttpMethod = "GET" | "POST" | "DELETE" | "PUT";
 
 interface RequestOptions {
-  method: HttpMethod;
+  method?: HttpMethod;
   headers?: Record<string, string>;
   body?: string;
+  endpoint?: string;
 }
 
 async function fetcher<T>(url: string, options?: RequestOptions): Promise<T> {
-  const URL = `${process.env.BACKEND_ENDPOINT}${url}`;
+  const URL = options?.endpoint
+    ? `${options?.endpoint}${url}`
+    : `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}${url}`;
 
   const defaultHeaders = {
-    Authorization: `Bearer ${process.env.BACKEND_PUBLIC_TOKEN}`,
+    Authorization: `Bearer ${process.env.NEXT_PUBLIC_BACKEND_PUBLIC_TOKEN}`,
     "Content-Type": "application/json",
     ...options?.headers,
   };

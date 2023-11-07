@@ -21,7 +21,7 @@ const ProductImageList: React.FC<ProductImageListProps> = ({ data }) => {
                 alt={item?.attributes?.name}
                 src={
                   item?.attributes?.image?.data?.attributes?.url
-                    ? `${process.env.BACKEND_ENDPOINT}${item?.attributes?.image?.data?.attributes?.url}`
+                    ? `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}${item?.attributes?.image?.data?.attributes?.url}`
                     : "/grey.jpg"
                 }
                 width={180}

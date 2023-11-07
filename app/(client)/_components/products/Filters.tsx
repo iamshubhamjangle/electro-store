@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Select,
   SelectContent,
@@ -8,14 +6,27 @@ import {
   SelectValue,
 } from "@/app/(client)/_components/ui/select";
 
-import { useQueryState } from "next-usequerystate";
+interface FiltersProps {
+  category: string | null;
+  setCategory: any;
+  rating: string | null;
+  setRating: any;
+  offers: string | null;
+  setOffers: any;
+  sortby: string | null;
+  setSortby: any;
+}
 
-const Filters = () => {
-  const [category, setCategory] = useQueryState("category");
-  const [rating, setRating] = useQueryState("rating");
-  const [offers, setOffers] = useQueryState("offers");
-  const [sortby, setSortby] = useQueryState("sortby");
-
+const Filters: React.FC<FiltersProps> = ({
+  category,
+  setCategory,
+  rating,
+  setRating,
+  offers,
+  setOffers,
+  sortby,
+  setSortby,
+}) => {
   const filtersData = [
     {
       title: "Category",
@@ -53,19 +64,19 @@ const Filters = () => {
       values: [
         {
           value: "1",
-          placeholder: "1+",
+          placeholder: "1 & above",
         },
         {
           value: "2",
-          placeholder: "2+",
+          placeholder: "2 & above",
         },
         {
           value: "3",
-          placeholder: "3+",
+          placeholder: "3 & above",
         },
         {
           value: "4",
-          placeholder: "4+",
+          placeholder: "4 & above",
         },
         {
           value: "clear",

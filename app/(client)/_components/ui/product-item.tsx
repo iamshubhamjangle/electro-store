@@ -41,7 +41,7 @@ const ProductItem = ({
     >
       <Link href={`/${productId}`}>
         <Image
-          src={`${process.env.BACKEND_ENDPOINT}${imgSrc}`}
+          src={`${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}${imgSrc}`}
           alt={name}
           width={width}
           height={height}
