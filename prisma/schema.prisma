@@ -57,6 +57,7 @@ model VerificationToken {
 
 model CartItem {
   id                     String @id @default(cuid())
+  product_id             String
   product_title          String
   product_sub_title      String
   product_quantity       Int    @default(1)
@@ -69,6 +70,7 @@ model CartItem {
 
 model OrderItem {
   id                     String @id @default(cuid())
+  product_id             String
   product_title          String
   product_sub_title      String
   product_quantity       Int    @default(1)

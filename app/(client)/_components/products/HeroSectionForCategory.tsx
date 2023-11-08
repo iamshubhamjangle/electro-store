@@ -34,12 +34,17 @@ const HeroSectionForCategory: React.FC<HeroSectionForCategoryProps> = ({
 
   return (
     <div className="space-y-2">
-      <div className="flex w-full rounded-lg overflow-clip h-fit">
+      <div
+        className="flex w-full rounded-lg overflow-clip h-fit"
+        style={{ maxHeight: "300px" }}
+      >
         <Image
           alt={""}
           src={
             data?.data &&
-            `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}${data?.data[0]?.attributes?.banner_image?.data?.attributes?.url}`
+            data?.data[0]?.attributes?.banner_image?.data?.attributes?.url
+              ? `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}${data?.data[0]?.attributes?.banner_image?.data?.attributes?.url}`
+              : "/grey.jpg"
           }
           width={1200}
           height={300}

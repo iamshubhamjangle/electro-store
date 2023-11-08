@@ -41,7 +41,11 @@ const ProductItem = ({
     >
       <div>
         <Image
-          src={`${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}${imgSrc}`}
+          src={
+            imgSrc
+              ? `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}${imgSrc}`
+              : "/grey.jpg"
+          }
           alt={name}
           width={width}
           height={height}
@@ -76,7 +80,13 @@ const ProductItem = ({
         </div>
       </div>
       <div className="mt-2">
-        <ProductItemAddToCart />
+        <ProductItemAddToCart
+          product_id={productId.toString()}
+          product_title={name}
+          product_sub_title={description}
+          product_current_price={currentPrice.toString()}
+          product_original_price={originalPrice.toString()}
+        />
       </div>
     </div>
   );
