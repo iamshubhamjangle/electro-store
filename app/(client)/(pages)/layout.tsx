@@ -3,6 +3,7 @@ import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/app/(client)/_components/nav";
 import { Footer } from "@/app/(client)/_components/footer";
+import Providers from "@/app/(client)/(pages)/providers";
 
 const opensans = Open_Sans({ subsets: ["latin"] });
 
@@ -19,9 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={opensans.className}>
-        <Nav />
-        {children}
-        <Footer />
+        <Providers>
+          <Nav />
+          {children}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
