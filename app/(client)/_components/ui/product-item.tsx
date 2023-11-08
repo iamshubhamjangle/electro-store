@@ -39,7 +39,7 @@ const ProductItem = ({
       )}
       {...props}
     >
-      <Link href={`/${productId}`}>
+      <div>
         <Image
           src={`${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}${imgSrc}`}
           alt={name}
@@ -74,7 +74,7 @@ const ProductItem = ({
             </div>
           </div>
         </div>
-      </Link>
+      </div>
       <div className="mt-2">
         <ProductItemAddToCart />
       </div>

@@ -14,7 +14,7 @@ const ProductImageList: React.FC<ProductImageListProps> = ({ data }) => {
             <Link
               key={item?.id || idx}
               className="relative flex justify-center group rounded-md overflow-hidden min-w-[180px]"
-              href={`${item?.attributes?.slug}`}
+              href={item?.attributes?.slug}
               prefetch={false}
             >
               <Image
