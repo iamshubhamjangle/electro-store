@@ -27,7 +27,7 @@ const ProductItemAddToCart: React.FC<ProductItemAddToCartProps> = ({
   const [loading, setLoading] = useState(false);
 
   const handleAddToCart = () => {
-    console.log("ADD_TO_CART");
+    setLoading(true);
 
     const body = {
       product_id,

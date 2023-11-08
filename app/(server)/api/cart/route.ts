@@ -37,18 +37,39 @@ export async function POST(req: NextRequest) {
       return new NextResponse("Missing Fields", { status: 400 });
     }
 
-    await prisma.cartItem.create({
-      data: {
+    // Check if cartItem already exists
+    const existingCartItem = await prisma.cartItem.findFirst({
+      where: {
         product_id,
-        product_title,
-        product_sub_title,
-        product_current_price: parseInt(product_current_price),
-        product_original_price: parseInt(product_original_price),
         userId,
       },
     });
 
-    return new NextResponse("Successfully Added to Cart");
+    if (existingCartItem) {
+      // If exist, increment the quantity
+      await prisma.cartItem.update({
+        data: {
+          product_quantity: existingCartItem.product_quantity + 1,
+        },
+        where: {
+          id: existingCartItem.id,
+        },
+      });
+    } else {
+      // else, create new cartItem entry
+      await prisma.cartItem.create({
+        data: {
+          product_id,
+          product_title,
+          product_sub_title,
+          product_current_price: parseInt(product_current_price),
+          product_original_price: parseInt(product_original_price),
+          userId,
+        },
+      });
+    }
+
+    return new NextResponse("Successfully Added/Updated Cart");
   } catch (error) {
     console.error("<<< ERROR >>><<< API/CART/GET >>>", error);
     if (error instanceof PrismaClientKnownRequestError) {
