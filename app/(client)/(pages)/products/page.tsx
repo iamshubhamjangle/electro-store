@@ -17,7 +17,7 @@ const Page = () => {
 
   return (
     <main className="container max-w-7xl">
-      <HeroSectionForCategory />
+      <HeroSectionForCategory category={category} />
       <div className="space-y-16 my-16">
         <Filters
           category={category}
