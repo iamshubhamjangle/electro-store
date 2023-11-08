@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Avatar,
   AvatarFallback,
@@ -11,37 +13,45 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/app/(client)/_components/ui/dropdown-menu";
+import { signOut } from "next-auth/react";
 
-export default function UserNav() {
+export default function UserNav({ session }: any) {
+  console.log("session", session);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-9 w-9">
-            <AvatarImage src="/avatars/03.png" alt="@username" />
-            <AvatarFallback>SC</AvatarFallback>
+            <AvatarImage
+              src={session?.user?.image}
+              alt={session?.user?.name || "username"}
+            />
+            <AvatarFallback>
+              {session?.user?.name?.charAt(0) || ":-)"}
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">username</p>
+            <p className="text-sm font-medium leading-none">
+              {session?.user?.name}
+            </p>
             <p className="text-xs leading-none text-muted-foreground">
-              user@example.com
+              {session?.user?.email || ""}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Orders</DropdownMenuItem>
-          <DropdownMenuItem>Settings</DropdownMenuItem>
+          <DropdownMenuItem>My Orders</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Log out</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => signOut()}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
