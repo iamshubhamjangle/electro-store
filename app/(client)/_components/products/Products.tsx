@@ -51,6 +51,7 @@ const Products: React.FC<ProductsProps> = ({
 
     await fetcher(URL)
       .then((data) => setData(data))
+      .then(() => console.log("PRODUCTS_FETCHED: ", URL))
       .catch((e) => {});
   }
 

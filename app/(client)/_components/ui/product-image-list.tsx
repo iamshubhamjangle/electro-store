@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 interface ProductImageListProps {
   data: any;
@@ -11,10 +10,10 @@ const ProductImageList: React.FC<ProductImageListProps> = ({ data }) => {
       <div className="flex gap-4 overflow-auto">
         {data?.data?.map((item: any, idx: number) => {
           return (
-            <Link
+            <a
               key={item?.id || idx}
               className="relative flex justify-center group rounded-md overflow-hidden min-w-[180px]"
-              href={`/category/${item?.attributes?.slug}`}
+              href={`${item?.attributes?.slug}`}
             >
               <Image
                 className="object-cover"
@@ -31,7 +30,7 @@ const ProductImageList: React.FC<ProductImageListProps> = ({ data }) => {
               <div className="absolute z-10 self-center text-white font-bold text-xl group-hover:opacity-0 transition-opacity duration-300">
                 {item?.attributes?.name}
               </div>
-            </Link>
+            </a>
           );
         })}
       </div>

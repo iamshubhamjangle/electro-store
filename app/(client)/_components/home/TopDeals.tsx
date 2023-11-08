@@ -4,7 +4,7 @@ import fetcher from "@/app/_lib/fetcher";
 
 const TopDeals = async () => {
   const data = await fetcher(
-    "/api/deals?populate=*&filters[traits][type][$eq]=ON_DEAL"
+    "/api/deals?populate=*&filters[type][$eq]=TOP_DEAL"
   ).catch((e) => {});
 
   return (

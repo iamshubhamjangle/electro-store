@@ -4,7 +4,7 @@ import fetcher from "@/app/_lib/fetcher";
 
 const DiscountedDeals = async () => {
   const data = await fetcher(
-    "/api/deals?populate=*&filters[traits][type][$eq]=DISCOUNTED"
+    "/api/deals?populate=*&filters[type][$eq]=DISCOUNTED"
   ).catch((e) => {});
 
   return (

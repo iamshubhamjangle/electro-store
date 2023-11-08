@@ -18,8 +18,6 @@ import {
 import { signOut } from "next-auth/react";
 
 export default function UserNav({ session }: any) {
-  console.log("session", session);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
