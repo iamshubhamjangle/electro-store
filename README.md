@@ -28,7 +28,80 @@ npx prisma init
 
 Create `[...nextauth]/route.ts`, `_lib/auth.ts`, `_lib/db.ts`, `_types/next-auth.d.ts`, `_lib/serverAuth.ts`
 Update `prisma/schema.prisma`
+
+```prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+```
+
 Add `.env` variables
+
+```
+# To generate 32 bit secret
+NODE_ENV="development"
+
+# Database
+DATABASE_URL=postgres://username:password@localhost:5432/db_name
+DIRECT_URL=postgres://username:password@localhost:5432/db_name
+
+# Next Auth
+NEXTAUTH_URL=http://localhost:3000/
+NEXTAUTH_SECRET="" # To generate run >> openssl rand -base64 32 | paste --delimiters '' --serial
+GOOGLE_CLIENT_ID=""
+GOOGLE_CLIENT_SECRET=""
+```
 
 ```
 npx prisma migrate dev
