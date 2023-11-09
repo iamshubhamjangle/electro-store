@@ -1,4 +1,6 @@
 import { serverAuth } from "@/app/_lib/serverAuth";
+import Link from "next/link";
+import prisma from "@/app/_lib/db";
 
 const MyCart = async ({ title, Icon }: any) => {
   const session = await serverAuth();
@@ -13,12 +15,16 @@ const MyCart = async ({ title, Icon }: any) => {
     : 0;
 
   return (
-    <span className="flex gap-1 items-center text-slate-700">
+    <Link
+      href={"/cart"}
+      prefetch={false}
+      className="flex gap-1 items-center text-slate-700"
+    >
       {Icon && <Icon className="w-5 h-5" />}
       <span>
         {title} ({numberOfCartItem})
       </span>
-    </span>
+    </Link>
   );
 };
 

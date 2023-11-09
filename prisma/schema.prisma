@@ -60,6 +60,7 @@ model CartItem {
   product_id             String
   product_title          String
   product_sub_title      String
+  product_image_url      String
   product_quantity       Int    @default(1)
   product_current_price  Int
   product_original_price Int

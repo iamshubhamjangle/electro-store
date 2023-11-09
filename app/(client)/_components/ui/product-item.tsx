@@ -84,6 +84,7 @@ const ProductItem = ({
           product_id={productId.toString()}
           product_title={name}
           product_sub_title={description}
+          product_image_url={imgSrc}
           product_current_price={currentPrice.toString()}
           product_original_price={originalPrice.toString()}
         />
