@@ -1,3 +1,3 @@
-import CartSummary from "./cartSummary";
+import CartSummary from "./cart-summary";
 
 export { CartSummary };
