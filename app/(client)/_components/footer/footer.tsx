@@ -63,7 +63,7 @@ const Footer = () => {
 
   return (
     <div className="border border-t">
-      <div className="flex flex-wrap justify-center gap-40 mt-10">
+      <div className="flex flex-col items-center justify-center text-center gap-10 md:flex-row md:items-start md:gap-40 mt-10">
         {data?.map((item, idx) => {
           return (
             <div key={idx} className="flex flex-col gap-3">
