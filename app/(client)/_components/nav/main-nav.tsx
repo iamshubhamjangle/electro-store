@@ -13,11 +13,11 @@ const MainNav = async () => {
 
   return (
     <div className="container max-w-7xl">
-      <div className="flex justify-between items-center gap-16 p-3">
+      <div className="flex justify-between items-center md:gap-16 p-3">
         <Link href={"/"}>
           <Image src={"/logo_light.png"} alt="logo" width={100} height={100} />
         </Link>
-        <div className="flex-1">
+        <div className="hidden md:flex w-full">
           <Search />
         </div>
         <div className="flex gap-4 font-semibold">
@@ -25,6 +25,9 @@ const MainNav = async () => {
           {session && <UserNav session={session} />}
           {!session && <LoginButton />}
         </div>
+      </div>
+      <div className="block mb-2 md:hidden">
+        <Search />
       </div>
     </div>
   );

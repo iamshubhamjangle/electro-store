@@ -21,9 +21,8 @@ const MyCart = async ({ title, Icon }: any) => {
       className="flex gap-1 items-center text-slate-700"
     >
       {Icon && <Icon className="w-5 h-5" />}
-      <span>
-        {title} ({numberOfCartItem})
-      </span>
+      <span className="hidden md:block">Cart</span>
+      <span>({numberOfCartItem})</span>
     </Link>
   );
 };
