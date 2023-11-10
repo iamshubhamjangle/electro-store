@@ -24,7 +24,7 @@ const CartItem: React.FC<cartItemsProps> = ({
 }) => {
   return (
     <div className="flex gap-2 items-center hover:shadow-md p-2">
-      <div style={{ minWidth: "200px", maxWidth: "200px" }}>
+      <div className="min-w-[100px] max-w-[100px] md:min-w-[200px] md:max-w-[200px]">
         <Image
           alt={product_title}
           src={`${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}${product_image_url}`}
@@ -41,9 +41,15 @@ const CartItem: React.FC<cartItemsProps> = ({
         <p className="text-xs">
           Qty: <span className="font-bold">{product_quantity}</span>
         </p>
+        <div className="flex md:hidden gap-2 items-center">
+          <span className="text-xl font-bold">₹{product_current_price}</span>
+          <span className="text-xs line-through text-muted-foreground">
+            ₹{product_original_price}
+          </span>
+        </div>
         <RemoveCartItem cart_item_id={id} />
       </div>
-      <div className="flex gap-2 items-center">
+      <div className="hidden md:flex gap-2 items-center">
         <span className="text-xl font-bold">₹{product_current_price}</span>
         <span className="text-xs line-through text-muted-foreground">
           ₹{product_original_price}
