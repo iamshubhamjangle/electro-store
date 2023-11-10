@@ -131,8 +131,8 @@ const Filters: React.FC<FiltersProps> = ({
   };
 
   return (
-    <div className="flex justify-between">
-      <div className="flex gap-8">
+    <div className="flex flex-col md:flex-row gap-2 justify-between">
+      <div className="flex gap-1 md:gap-6">
         {filtersData.map((item, idx) => {
           if (item.position !== "left") return;
 
