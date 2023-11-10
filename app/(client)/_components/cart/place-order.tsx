@@ -1,21 +1,33 @@
 "use client";
 
-import { Button } from "@/app/(client)/_components/ui/button";
-import { useState } from "react";
+import axios from "axios";
 import toast from "react-hot-toast";
+import { useState } from "react";
+
+import { Button } from "@/app/(client)/_components/ui/button";
 
 const PlaceOrder = () => {
   const [loading, setLoading] = useState(false);
 
   const handlePlaceOrder = () => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      toast.success("Order Placed Successfully!", {
-        duration: 3000,
-        icon: "👏",
-      });
-    }, 2000);
+
+    axios
+      .post("/api/order")
+      .then((res) => {
+        console.log(res);
+        toast.success("Order Placed Successfully!", {
+          duration: 3000,
+          icon: "👏",
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Oops, Order Failed :(", {
+          duration: 3000,
+        });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
