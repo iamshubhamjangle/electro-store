@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/app/(client)/_components/ui/dropdown-menu";
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 
 export default function UserNav({ session }: any) {
   return (
@@ -46,7 +47,11 @@ export default function UserNav({ session }: any) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>My Orders</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link prefetch={false} href={"/orders"} className="w-full">
+              My Orders
+            </Link>
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => signOut()}>Log out</DropdownMenuItem>

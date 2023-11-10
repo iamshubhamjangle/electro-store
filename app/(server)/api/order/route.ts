@@ -16,11 +16,17 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    let orderTotal = cartItems.reduce(
+      (total, product) => total + product.product_current_price,
+      0
+    );
+
     // Create a new order
     const order = await prisma.order.create({
       data: {
         userId: userId,
-        orders: {
+        orderTotal,
+        products: {
           createMany: {
             data: cartItems.map((cartItem) => {
               return {
