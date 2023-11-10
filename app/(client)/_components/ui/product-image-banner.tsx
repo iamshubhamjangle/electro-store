@@ -14,7 +14,8 @@ const ProductImageBanner: React.FC<ProductImageBannerProps> = ({ data }) => {
             <Image
               className="rounded-md object-cover"
               alt={
-                item?.attributes?.image?.data?.attributes?.alternativeText || ""
+                item?.attributes?.image?.data?.attributes?.alternativeText ||
+                "product image"
               }
               src={
                 item?.attributes?.image?.data?.attributes?.url
