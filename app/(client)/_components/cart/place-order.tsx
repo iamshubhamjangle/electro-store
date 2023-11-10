@@ -5,9 +5,11 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 
 import { Button } from "@/app/(client)/_components/ui/button";
+import { useRouter } from "next/navigation";
 
 const PlaceOrder = () => {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handlePlaceOrder = () => {
     setLoading(true);
@@ -20,6 +22,7 @@ const PlaceOrder = () => {
           duration: 3000,
           icon: "👏",
         });
+        router.refresh();
       })
       .catch((err) => {
         console.log(err);

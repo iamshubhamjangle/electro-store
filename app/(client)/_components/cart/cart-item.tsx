@@ -1,4 +1,5 @@
 import Image from "next/image";
+import RemoveCartItem from "./cart-item-remove";
 
 interface cartItemsProps {
   id: string;
@@ -40,6 +41,7 @@ const CartItem: React.FC<cartItemsProps> = ({
         <p className="text-xs">
           Qty: <span className="font-bold">{product_quantity}</span>
         </p>
+        <RemoveCartItem cart_item_id={id} />
       </div>
       <div className="flex gap-2 items-center">
         <span className="text-xl font-bold">₹{product_current_price}</span>

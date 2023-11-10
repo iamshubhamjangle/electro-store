@@ -4,7 +4,7 @@ import prisma from "@/app/_lib/db";
 import { serverAuth } from "@/app/_lib/serverAuth";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
-type Tbody = {
+type TCartPostBody = {
   product_id: string;
   product_title: string;
   product_sub_title: string;
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       product_image_url,
       product_current_price,
       product_original_price,
-    }: Tbody = body;
+    }: TCartPostBody = body;
 
     if (
       !product_id ||
@@ -76,6 +76,43 @@ export async function POST(req: NextRequest) {
     return new NextResponse("Successfully Added/Updated Cart");
   } catch (error) {
     console.error("<<< ERROR >>><<< API/CART/GET >>>", error);
+    if (error instanceof PrismaClientKnownRequestError) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
+}
+
+type TCartDeleteBody = {
+  cart_item_id: string;
+};
+
+export async function DELETE(req: NextRequest) {
+  console.log("DELETING");
+  try {
+    const session = await serverAuth();
+    if (!session) return new NextResponse("Unauthorized", { status: 401 });
+    const userId = session.user?.id;
+
+    const body = await req.json();
+    const { cart_item_id }: TCartDeleteBody = body;
+
+    if (!cart_item_id) {
+      return new NextResponse("Missing Fields", { status: 400 });
+    }
+
+    await prisma.cartItem.delete({
+      where: {
+        id: cart_item_id,
+        userId,
+      },
+    });
+
+    console.log("ITEM DELETED");
+
+    return new NextResponse("Successfully Deleted Cart Item");
+  } catch (error) {
+    console.error("<<< ERROR >>><<< API/CART/DELETE >>>", error);
     if (error instanceof PrismaClientKnownRequestError) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
