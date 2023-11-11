@@ -17,10 +17,10 @@ const TrendingDealsInCategory: React.FC<TrendingDealsInCategoryProps> = ({
 
   async function fetchData() {
     let categoryFilter = "";
-    let trendingFilter = "&filters[traits][type][$eq]=TRENDING";
+    let trendingFilter = "&filters[traits][type][$eqi]=TRENDING";
 
     if (category) {
-      categoryFilter = `&filters[category][name][$eq]=${category}`;
+      categoryFilter = `&filters[category][name][$eqi]=${category}`;
     }
 
     const URL = `/api/products?populate=*${categoryFilter}${trendingFilter}`;

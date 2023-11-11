@@ -27,7 +27,7 @@ const Products: React.FC<ProductsProps> = ({
     let sortByFilter = "";
 
     if (category) {
-      categoryFilter = `&filters[category][name][$eq][0]=${category}`;
+      categoryFilter = `&filters[category][name][$eqi][0]=${category}`;
     }
 
     if (rating) {
@@ -36,9 +36,9 @@ const Products: React.FC<ProductsProps> = ({
 
     if (offers) {
       if (offers === "30")
-        offersFilter = `&filters[traits][type][$eq][2]=ON_DEAL_30%`;
+        offersFilter = `&filters[traits][type][$eqi][2]=ON_DEAL_30%`;
       else if (offers === "60")
-        offersFilter = `&filters[traits][type][$eq][2]=ON_DEAL_60%`;
+        offersFilter = `&filters[traits][type][$eqi][2]=ON_DEAL_60%`;
     }
 
     // GET /api/articles?sort[0]=title:asc&sort[1]=slug:desc
@@ -50,9 +50,12 @@ const Products: React.FC<ProductsProps> = ({
     const URL = `/api/products?populate=*${categoryFilter}${ratingFilter}${offersFilter}${sortByFilter}`;
 
     await fetcher(URL)
-      .then((data) => setData(data))
+      .then((data) => {
+        console.log("data", data);
+        setData(data);
+      })
       .then(() => console.log("PRODUCTS_FETCHED: ", URL))
-      .catch((e) => {});
+      .catch((e) => console.error("PRODUCTS_FETCHED_FAILED", e));
   }
 
   useEffect(() => {
