@@ -1,11 +1,13 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
+  schemas   = ["electro"]
 }
 
 model Account {
@@ -25,6 +27,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@schema("electro")
 }
 
 model Session {
@@ -33,6 +36,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@schema("electro")
 }
 
 model User {
@@ -45,6 +50,8 @@ model User {
   sessions      Session[]
   cartItems     CartItem[]
   orders        Order[]
+
+  @@schema("electro")
 }
 
 model VerificationToken {
@@ -53,6 +60,7 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+  @@schema("electro")
 }
 
 model CartItem {
@@ -67,6 +75,8 @@ model CartItem {
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@schema("electro")
 }
 
 model ProductItems {
@@ -80,6 +90,8 @@ model ProductItems {
 
   orderId String
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@schema("electro")
 }
 
 model Order {
@@ -91,4 +103,6 @@ model Order {
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@schema("electro")
 }
