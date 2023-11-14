@@ -3,12 +3,16 @@ import { SidebarNav } from "@/app/(client)/_components/admin/sidebar-nav";
 
 const sidebarNavItems = [
   {
-    title: "Category",
-    href: "/admin/category",
-  },
-  {
     title: "Products",
     href: "/admin/product",
+  },
+  {
+    title: "Orders",
+    href: "/admin/orders",
+  },
+  {
+    title: "Category",
+    href: "/admin/category",
   },
   {
     title: "Banners",
@@ -17,10 +21,6 @@ const sidebarNavItems = [
   {
     title: "Deals",
     href: "/admin/deal",
-  },
-  {
-    title: "Orders",
-    href: "/admin/orders",
   },
 ];
 

@@ -41,14 +41,14 @@ model Session {
 }
 
 model User {
-  id            String     @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String?    @unique
+  email         String?   @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  cartItems     CartItem[]
+  cart          Cart[]
   orders        Order[]
 
   @@schema("electro")
@@ -63,15 +63,71 @@ model VerificationToken {
   @@schema("electro")
 }
 
-model CartItem {
-  id                     String @id @default(cuid())
-  product_id             String
-  product_title          String
-  product_sub_title      String
-  product_image_url      String
-  product_quantity       Int    @default(1)
-  product_current_price  Int
-  product_original_price Int
+model Product {
+  id                 String   @id @default(cuid())
+  title              String
+  subTitle           String
+  description        String?
+  imageUrls          String[]
+  categoryId         String?
+  sellingPrice       Int      @default(0)
+  maximumRetailPrice Int      @default(0)
+  manufacturer       String?
+  rating             Decimal  @default(5)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  carts Cart[]
+  trait Trait[]
+
+  category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@schema("electro")
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  imageUrl    String
+  redirectUrl String
+  product     Product[]
+
+  @@schema("electro")
+}
+
+model Trait {
+  id       String    @id @default(cuid())
+  name     String
+  products Product[]
+
+  @@schema("electro")
+}
+
+model Cart {
+  id       String    @id @default(cuid())
+  userId   String
+  products Product[]
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@schema("electro")
+}
+
+model Banner {
+  id          String @id @default(cuid())
+  imageUrl    String
+  redirectUrl String
+  type        String
+
+  @@schema("electro")
+}
+
+model Order {
+  id         String         @id @default(cuid())
+  products   ProductItems[]
+  orderTotal Int            @default(0)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -90,19 +146,6 @@ model ProductItems {
 
   orderId String
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
-
-  @@schema("electro")
-}
-
-model Order {
-  id         String         @id @default(cuid())
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
-  products   ProductItems[]
-  orderTotal Int            @default(0)
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@schema("electro")
 }
