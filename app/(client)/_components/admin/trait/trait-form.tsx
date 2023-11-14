@@ -14,12 +14,17 @@ import {
 } from "@/app/(client)/_components/ui/form";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
+import axios from "axios";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 const traitFormSchema = z.object({
   name: z.string().min(1).max(50).toUpperCase(),
 });
 
 const TraitForm = () => {
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof traitFormSchema>>({
     resolver: zodResolver(traitFormSchema),
     defaultValues: {
@@ -27,8 +32,17 @@ const TraitForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof traitFormSchema>) {
-    console.log("TraitForm", values);
+  async function onSubmit(values: z.infer<typeof traitFormSchema>) {
+    const { name } = values;
+    setLoading(true);
+
+    await axios
+      .post("/api/admin/trait", {
+        name,
+      })
+      .then(() => toast.success("Added"))
+      .catch((err) => toast.error(`Unable to add new trait: ${err?.message}`))
+      .finally(() => setLoading(false));
   }
 
   return (
@@ -50,7 +64,9 @@ const TraitForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" loading={loading}>
+          Submit
+        </Button>
       </form>
     </Form>
   );
