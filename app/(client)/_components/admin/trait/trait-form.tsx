@@ -17,6 +17,7 @@ import { Input } from "../../ui/input";
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const traitFormSchema = z.object({
   name: z.string().min(1).max(50).toUpperCase(),
@@ -24,6 +25,7 @@ const traitFormSchema = z.object({
 
 const TraitForm = () => {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof traitFormSchema>>({
     resolver: zodResolver(traitFormSchema),
@@ -40,7 +42,10 @@ const TraitForm = () => {
       .post("/api/admin/trait", {
         name,
       })
-      .then(() => toast.success("Added"))
+      .then(() => {
+        toast.success("Added");
+        router.refresh();
+      })
       .catch((err) => toast.error(`Unable to add new trait: ${err?.message}`))
       .finally(() => setLoading(false));
   }
@@ -65,7 +70,7 @@ const TraitForm = () => {
           )}
         />
         <Button type="submit" loading={loading}>
-          Submit
+          Add
         </Button>
       </form>
     </Form>
