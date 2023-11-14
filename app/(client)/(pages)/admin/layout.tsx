@@ -8,7 +8,7 @@ const sidebarNavItems = [
   },
   {
     title: "Orders",
-    href: "/admin/orders",
+    href: "/admin/order",
   },
   {
     title: "Category",
@@ -19,8 +19,8 @@ const sidebarNavItems = [
     href: "/admin/banner",
   },
   {
-    title: "Deals",
-    href: "/admin/deal",
+    title: "Traits",
+    href: "/admin/trait",
   },
 ];
 

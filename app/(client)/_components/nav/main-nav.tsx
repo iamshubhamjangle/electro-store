@@ -7,6 +7,7 @@ import UserNav from "./main-nav-user-nav";
 import MyCart from "./my-cart";
 import { serverAuth } from "@/app/_lib/serverAuth";
 import LoginButton from "./main-nav-login";
+import { ThemeToggle } from "./theme-toggle";
 
 const MainNav = async () => {
   const session = await serverAuth();
@@ -24,6 +25,7 @@ const MainNav = async () => {
           {session && <MyCart title="Cart" Icon={ShoppingCart} />}
           {session && <UserNav session={session} />}
           {!session && <LoginButton />}
+          <ThemeToggle />
         </div>
       </div>
       <div className="block mb-2 md:hidden">
