@@ -40,7 +40,6 @@ const Login: React.FC<any> = ({ searchParams }) => {
             type="button"
             variant="outline"
             onClick={handleLoginWithGoogleOAuth}
-            disabled={loading}
             loading={loading}
             className="border-primary text-primary hover:text-primary w-full"
           >

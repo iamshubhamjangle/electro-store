@@ -50,7 +50,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
-        disabled={loading}
         ref={ref}
         {...props}
       >

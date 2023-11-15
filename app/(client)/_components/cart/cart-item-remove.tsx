@@ -33,7 +33,6 @@ const RemoveCartItem: React.FC<RemoveCartItemProps> = ({ cart_item_id }) => {
       className="mt-2"
       onClick={handleRemoveItemFromCart}
       loading={loading}
-      disabled={loading}
     >
       Remove
     </Button>

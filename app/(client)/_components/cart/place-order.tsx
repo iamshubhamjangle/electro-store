@@ -35,12 +35,7 @@ const PlaceOrder = () => {
 
   return (
     <div className="pb-10 flex justify-center">
-      <Button
-        size="lg"
-        onClick={handlePlaceOrder}
-        loading={loading}
-        disabled={loading}
-      >
+      <Button size="lg" onClick={handlePlaceOrder} loading={loading}>
         Place Order
       </Button>
     </div>

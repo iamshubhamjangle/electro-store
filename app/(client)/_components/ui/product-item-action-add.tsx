@@ -56,7 +56,6 @@ const ProductItemAddToCart: React.FC<ProductItemAddToCartProps> = ({
       className="rounded-full w-full"
       onClick={handleAddToCart}
       loading={loading}
-      disabled={loading}
     >
       <ShoppingCart className="w-4 h-4 mr-2" />
       <span className="font-medium">Add to Cart</span>
