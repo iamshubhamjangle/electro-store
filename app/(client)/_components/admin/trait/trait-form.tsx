@@ -1,7 +1,11 @@
 "use client";
 
 import * as z from "zod";
+import axios from "axios";
+import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -12,39 +16,53 @@ import {
   FormLabel,
   FormMessage,
 } from "@/app/(client)/_components/ui/form";
-import { Button } from "../../ui/button";
-import { Input } from "../../ui/input";
-import axios from "axios";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { Button } from "@/app/(client)/_components/ui/button";
+import { Input } from "@/app/(client)/_components/ui/input";
+import { Trait } from "@prisma/client";
 
 const traitFormSchema = z.object({
+  id: z.string().optional(),
   name: z.string().min(1).max(50).toUpperCase(),
 });
 
-const TraitForm = () => {
+type formSchema = z.infer<typeof traitFormSchema>;
+
+interface TraitFormProps {
+  action: "ADD" | "UPDATE";
+  trait: Trait;
+  resetTrait: () => void;
+}
+
+const TraitForm: React.FC<TraitFormProps> = ({ action, trait, resetTrait }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof traitFormSchema>>({
+  const form = useForm<formSchema>({
     resolver: zodResolver(traitFormSchema),
     defaultValues: {
+      id: "",
       name: "",
+    },
+    values: {
+      id: trait.id,
+      name: trait.name,
     },
   });
 
-  async function onSubmit(values: z.infer<typeof traitFormSchema>) {
-    const { name } = values;
+  async function onSubmit(values: formSchema) {
+    const { id, name } = values;
+
     setLoading(true);
 
     await axios
       .post("/api/admin/trait", {
+        id,
         name,
       })
       .then(() => {
         toast.success("Added");
         router.refresh();
+        resetTrait();
       })
       .catch((err) => toast.error(`Unable to add new trait: ${err?.message}`))
       .finally(() => setLoading(false));
@@ -69,9 +87,23 @@ const TraitForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" loading={loading}>
-          Add
-        </Button>
+        {action === "ADD" && (
+          <>
+            <Button type="submit" loading={loading}>
+              Add
+            </Button>
+          </>
+        )}
+        {action === "UPDATE" && (
+          <div className="space-x-4">
+            <Button type="submit" loading={loading}>
+              Update
+            </Button>
+            <Button type="button" loading={loading} onClick={resetTrait}>
+              Cancel
+            </Button>
+          </div>
+        )}
       </form>
     </Form>
   );

@@ -1,4 +1,4 @@
-import { TraitForm, TraitTable } from "@/app/(client)/_components/admin";
+import { TraitFormWrapper, TraitTable } from "@/app/(client)/_components/admin";
 import prisma from "@/app/_lib/db";
 
 const Page = async () => {
@@ -6,7 +6,7 @@ const Page = async () => {
 
   return (
     <>
-      <TraitForm />
+      <TraitFormWrapper />
       <TraitTable traits={traits} />
     </>
   );
