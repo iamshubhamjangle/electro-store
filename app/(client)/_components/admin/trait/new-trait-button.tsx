@@ -8,9 +8,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/app/(client)/_components/ui/dialog";
-import TraitForm from "./trait-form";
+import { Button } from "@/app/(client)/_components/ui/button";
 import { useCartStore } from "@/app/(client)/_store/trait";
-import { Button } from "../../ui/button";
+
+import TraitForm from "./trait-form";
 
 const TraitNewButton = () => {
   const store = useCartStore();
@@ -25,7 +26,7 @@ const TraitNewButton = () => {
       </DialogTrigger>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Add Trait</DialogTitle>
+          <DialogTitle>Trait</DialogTitle>
           <DialogDescription>
             Click save when you&apos;re done.
           </DialogDescription>
