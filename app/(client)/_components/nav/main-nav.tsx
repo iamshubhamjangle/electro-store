@@ -21,7 +21,7 @@ const MainNav = async () => {
         <div className="hidden md:flex w-full">
           <Search />
         </div>
-        <div className="flex gap-4 font-semibold">
+        <div className="flex gap-4 font-semibold items-center">
           {session && <MyCart title="Cart" Icon={ShoppingCart} />}
           {session && <UserNav session={session} />}
           {!session && <LoginButton />}
