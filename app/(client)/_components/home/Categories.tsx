@@ -1,5 +1,5 @@
 import ContentRow from "@/app/(client)/_components/home/ContentRow";
-import ProductImageList from "@/app/(client)/_components/ui/product-image-list";
+import ProductImageList from "@/component/product-image-list";
 import fetcher from "@/app/_lib/fetcher";
 
 const Categories = async () => {

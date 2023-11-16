@@ -1,4 +1,4 @@
-import { Button } from "@/app/(client)/_components/ui/button";
+import { Button } from "@/component/button";
 import Link from "next/link";
 
 const ViewAllProducts = () => {

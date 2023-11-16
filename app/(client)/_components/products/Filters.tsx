@@ -4,7 +4,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/app/(client)/_components/ui/select";
+} from "@/component/select";
 
 interface FiltersProps {
   category: string | null;

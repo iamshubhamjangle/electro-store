@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-import ProductItemList from "@/app/(client)/_components/ui/product-item-list";
+import ProductItemList from "@/component/product-item-list";
 import ContentRow from "@/app/(client)/_components/home/ContentRow";
 import fetcher from "@/app/_lib/fetcher";
 

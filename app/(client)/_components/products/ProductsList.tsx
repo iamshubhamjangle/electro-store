@@ -1,4 +1,4 @@
-import ProductItem from "@/app/(client)/_components/ui/product-item";
+import ProductItem from "@/component/product-item";
 
 interface ProductListProps {
   data: any;

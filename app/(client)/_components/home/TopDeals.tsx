@@ -1,5 +1,5 @@
 import ContentRow from "@/app/(client)/_components/home/ContentRow";
-import ProductImageBanner from "@/app/(client)/_components/ui/product-image-banner";
+import ProductImageBanner from "@/component/product-image-banner";
 import fetcher from "@/app/_lib/fetcher";
 
 const TopDeals = async () => {

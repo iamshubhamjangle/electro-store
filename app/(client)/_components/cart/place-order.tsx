@@ -4,7 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useState } from "react";
 
-import { Button } from "@/app/(client)/_components/ui/button";
+import { Button } from "@/component/button";
 import { useRouter } from "next/navigation";
 
 const PlaceOrder = () => {

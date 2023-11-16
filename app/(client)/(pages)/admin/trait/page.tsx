@@ -3,7 +3,7 @@ import {
   traitColumns,
   TraitNewButton,
 } from "@/app/(client)/_components/admin/trait";
-import { DataTable } from "@/app/(client)/_components/ui/data-table";
+import { DataTable } from "@/component/data-table";
 
 const Page = async () => {
   const traits = await prisma.trait.findMany();

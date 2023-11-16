@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { toast } from "react-hot-toast";
 
-import { Button } from "@/app/(client)/_components/ui/button";
+import { Button } from "@/component/button";
 
 const Login: React.FC<any> = ({ searchParams }) => {
   const [loading, setLoading] = useState<boolean>(false);

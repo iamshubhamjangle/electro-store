@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/app/(client)/_components/providers/theme-provider";
-// import { TooltipProvider } from "@/app/(client)/_components/ui/tooltip";
+// import { TooltipProvider } from "@/component/tooltip";
 
 const Providers = ({ children }: { children: ReactNode }) => {
   return (

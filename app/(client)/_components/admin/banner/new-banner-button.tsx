@@ -10,10 +10,9 @@ import {
 } from "@/component/dialog";
 import { Button } from "@/component/button";
 import { useCartStore } from "@/app/(client)/_store/trait";
+import BannerForm from "./banner-form";
 
-import TraitForm from "./trait-form";
-
-const TraitNewButton = () => {
+const NewBannerButton = () => {
   const store = useCartStore();
   const { dialogOpen, setDialogOpen } = store;
 
@@ -26,19 +25,19 @@ const TraitNewButton = () => {
       </DialogTrigger>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Trait</DialogTitle>
+          <DialogTitle>Banner</DialogTitle>
           <DialogDescription>
             Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-        <TraitForm
-          action={store.action}
-          trait={store.trait}
-          resetTrait={store.resetTrait}
+        <BannerForm
+        // action={store.action}
+        // trait={store.trait}
+        // resetTrait={store.resetTrait}
         />
       </DialogContent>
     </Dialog>
   );
 };
 
-export default TraitNewButton;
+export default NewBannerButton;

@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { Button } from "@/app/(client)/_components/ui/button";
+import { Button } from "@/component/button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 

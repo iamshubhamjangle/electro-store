@@ -1,11 +1,7 @@
 "use client";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/app/(client)/_components/ui/avatar";
-import { Button } from "@/app/(client)/_components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/component/avatar";
+import { Button } from "@/component/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/app/(client)/_components/ui/dropdown-menu";
+} from "@/component/dropdown-menu";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 

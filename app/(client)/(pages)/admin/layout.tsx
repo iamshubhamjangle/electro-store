@@ -1,4 +1,4 @@
-import { Separator } from "@/app/(client)/_components/ui/separator";
+import { Separator } from "@/component/separator";
 import { SidebarNav } from "@/app/(client)/_components/admin/sidebar-nav";
 
 const sidebarNavItems = [

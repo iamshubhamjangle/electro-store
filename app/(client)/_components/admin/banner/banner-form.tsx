@@ -18,34 +18,44 @@ import {
 } from "@/component/form";
 import { Button } from "@/component/button";
 import { Input } from "@/component/input";
-import { Trait } from "@prisma/client";
+import { Banner } from "@prisma/client";
 
-const traitFormSchema = z.object({
+const BannerFormSchema = z.object({
   id: z.string().optional(),
-  name: z.string().min(1).max(50).toUpperCase(),
+  imageUrl: z.string().min(1),
+  redirectUrl: z.string().min(1),
+  type: z.string().min(1).max(50).toUpperCase(),
 });
 
-type formSchema = z.infer<typeof traitFormSchema>;
+type formSchema = z.infer<typeof BannerFormSchema>;
 
-interface TraitFormProps {
+interface BannerFormProps {
   action: "ADD" | "UPDATE";
-  trait: Trait;
+  banner: Banner;
   resetTrait: () => void;
 }
 
-const TraitForm: React.FC<TraitFormProps> = ({ action, trait, resetTrait }) => {
+const BannerForm: React.FC<BannerFormProps> = ({
+  action,
+  banner,
+  resetTrait,
+}) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const form = useForm<formSchema>({
-    resolver: zodResolver(traitFormSchema),
+    resolver: zodResolver(BannerFormSchema),
     defaultValues: {
       id: "",
-      name: "",
+      type: "",
+      imageUrl: "",
+      redirectUrl: "",
     },
     values: {
-      id: trait.id,
-      name: trait.name,
+      id: "",
+      type: "",
+      imageUrl: "",
+      redirectUrl: "",
     },
   });
 
@@ -97,4 +107,4 @@ const TraitForm: React.FC<TraitFormProps> = ({ action, trait, resetTrait }) => {
   );
 };
 
-export default TraitForm;
+export default BannerForm;
