@@ -1,6 +1,8 @@
 import prisma from "@/app/_lib/db";
-import TraitNewButton from "@/app/(client)/_components/admin/trait/trait-new-button";
-import { traitColumns } from "@/app/(client)/_components/admin";
+import {
+  traitColumns,
+  TraitNewButton,
+} from "@/app/(client)/_components/admin/trait";
 import { DataTable } from "@/app/(client)/_components/ui/data-table";
 
 const Page = async () => {
