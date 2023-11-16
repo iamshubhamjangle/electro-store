@@ -4,7 +4,7 @@ import * as z from "zod";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -87,23 +87,11 @@ const TraitForm: React.FC<TraitFormProps> = ({ action, trait, resetTrait }) => {
             </FormItem>
           )}
         />
-        {action === "ADD" && (
-          <>
-            <Button type="submit" loading={loading}>
-              Add
-            </Button>
-          </>
-        )}
-        {action === "UPDATE" && (
-          <div className="space-x-4">
-            <Button type="submit" loading={loading}>
-              Update
-            </Button>
-            <Button type="button" loading={loading} onClick={resetTrait}>
-              Cancel
-            </Button>
-          </div>
-        )}
+        <div className="flex justify-end">
+          <Button type="submit" loading={loading}>
+            {action === "ADD" ? "Save" : "Update"}
+          </Button>
+        </div>
       </form>
     </Form>
   );

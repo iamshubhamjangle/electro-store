@@ -1,4 +1,3 @@
-import TraitFormWrapper from "./trait/trait-form-wrapper";
-import TraitTable from "./trait/trait-table";
+import traitColumns from "./trait/trait-columns";
 
-export { TraitFormWrapper, TraitTable };
+export { traitColumns };

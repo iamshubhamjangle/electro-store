@@ -10,7 +10,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-export const columns: ColumnDef<Trait>[] = [
+const traitColumns: ColumnDef<Trait>[] = [
   {
     accessorKey: "name",
     header: () => <div className="font-bold">Trend Name</div>,
@@ -24,6 +24,8 @@ export const columns: ColumnDef<Trait>[] = [
     },
   },
 ];
+
+export default traitColumns;
 
 const ActionRow: React.FC<any> = ({ row }) => {
   const store = useCartStore();
@@ -53,6 +55,7 @@ const ActionRow: React.FC<any> = ({ row }) => {
         onClick={() => {
           store.setAction("UPDATE");
           store.setTrait(row.original);
+          store.setDialogOpen(true);
         }}
       >
         <span className="sr-only">Edit</span>
@@ -70,5 +73,3 @@ const ActionRow: React.FC<any> = ({ row }) => {
     </>
   );
 };
-
-export default ActionRow;
