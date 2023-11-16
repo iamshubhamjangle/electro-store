@@ -41,37 +41,37 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if cartItem already exists
-    const existingCartItem = await prisma.cartItem.findFirst({
-      where: {
-        product_id,
-        userId,
-      },
-    });
+    // const existingCartItem = await prisma.cart.findFirst({
+    //   where: {
+    //     product_id,
+    //     userId,
+    //   },
+    // });
 
-    if (existingCartItem) {
-      // If exist, increment the quantity
-      await prisma.cartItem.update({
-        data: {
-          product_quantity: existingCartItem.product_quantity + 1,
-        },
-        where: {
-          id: existingCartItem.id,
-        },
-      });
-    } else {
-      // else, create new cartItem entry
-      await prisma.cartItem.create({
-        data: {
-          product_id,
-          product_title,
-          product_sub_title,
-          product_image_url,
-          product_current_price: parseInt(product_current_price),
-          product_original_price: parseInt(product_original_price),
-          userId,
-        },
-      });
-    }
+    // if (existingCartItem) {
+    //   // If exist, increment the quantity
+    //   await prisma.cart.update({
+    //     data: {
+    //       : existingCartItem.product_quantity + 1,
+    //     },
+    //     where: {
+    //       id: existingCartItem.id,
+    //     },
+    //   });
+    // } else {
+    //   // else, create new cartItem entry
+    //   await prisma.cartItem.create({
+    //     data: {
+    //       product_id,
+    //       product_title,
+    //       product_sub_title,
+    //       product_image_url,
+    //       product_current_price: parseInt(product_current_price),
+    //       product_original_price: parseInt(product_original_price),
+    //       userId,
+    //     },
+    //   });
+    // }
 
     return new NextResponse("Successfully Added/Updated Cart");
   } catch (error) {
@@ -101,7 +101,7 @@ export async function DELETE(req: NextRequest) {
       return new NextResponse("Missing Fields", { status: 400 });
     }
 
-    await prisma.cartItem.delete({
+    await prisma.cart.delete({
       where: {
         id: cart_item_id,
         userId,

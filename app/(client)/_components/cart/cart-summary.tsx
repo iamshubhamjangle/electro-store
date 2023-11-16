@@ -12,7 +12,7 @@ const CartSummary = async () => {
   if (!userId) return <div>You are not logged in!</div>;
 
   // Fetch Cart Items
-  const cartItems = await prisma.cartItem.findMany({
+  const cartItems = await prisma.cart.findMany({
     where: {
       userId,
     },
