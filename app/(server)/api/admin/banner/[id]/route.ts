@@ -2,13 +2,13 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/_lib/db";
 
-export type TTraitDeleteRequestBody = {
+export type TBannerDeleteRequestBody = {
   id: string;
 };
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: TBannerDeleteRequestBody }
 ) {
   try {
     // // Authentication
@@ -21,7 +21,7 @@ export async function DELETE(
       return new NextResponse("Missing Fields", { status: 400 });
     }
 
-    await prisma.trait.delete({
+    await prisma.banner.delete({
       where: {
         id,
       },
@@ -29,7 +29,10 @@ export async function DELETE(
 
     return new NextResponse("Success");
   } catch (error) {
-    console.error(`<<< ERROR::DELETE::api/admin/trait/${params.id} >>>`, error);
+    console.error(
+      `<<< ERROR::DELETE::api/admin/banner/${params.id} >>>`,
+      error
+    );
     if (error instanceof PrismaClientKnownRequestError) {
       return new NextResponse("Unauthorized", { status: 401 });
     }

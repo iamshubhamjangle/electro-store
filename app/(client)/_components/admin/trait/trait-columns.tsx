@@ -4,7 +4,7 @@ import { Trait } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../../ui/button";
 import { Edit, Trash2 } from "lucide-react";
-import { useCartStore } from "@/app/(client)/_store/trait";
+import { useTraitFormStore } from "@/app/(client)/_store/trait";
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -28,7 +28,7 @@ const traitColumns: ColumnDef<Trait>[] = [
 export default traitColumns;
 
 const ActionRow: React.FC<any> = ({ row }) => {
-  const store = useCartStore();
+  const store = useTraitFormStore();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 

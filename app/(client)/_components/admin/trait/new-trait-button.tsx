@@ -9,12 +9,12 @@ import {
   DialogTrigger,
 } from "@/component/dialog";
 import { Button } from "@/component/button";
-import { useCartStore } from "@/app/(client)/_store/trait";
+import { useTraitFormStore } from "@/app/(client)/_store/trait";
 
 import TraitForm from "./trait-form";
 
 const TraitNewButton = () => {
-  const store = useCartStore();
+  const store = useTraitFormStore();
   const { dialogOpen, setDialogOpen } = store;
 
   return (

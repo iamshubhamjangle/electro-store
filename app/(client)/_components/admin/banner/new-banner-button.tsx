@@ -9,11 +9,11 @@ import {
   DialogTrigger,
 } from "@/component/dialog";
 import { Button } from "@/component/button";
-import { useCartStore } from "@/app/(client)/_store/trait";
 import BannerForm from "./banner-form";
+import { useBannerStore } from "@/app/(client)/_store/banner";
 
 const NewBannerButton = () => {
-  const store = useCartStore();
+  const store = useBannerStore();
   const { dialogOpen, setDialogOpen } = store;
 
   return (
@@ -31,9 +31,9 @@ const NewBannerButton = () => {
           </DialogDescription>
         </DialogHeader>
         <BannerForm
-        // action={store.action}
-        // trait={store.trait}
-        // resetTrait={store.resetTrait}
+          action={store.action}
+          banner={store.banner}
+          resetBanner={store.resetBanner}
         />
       </DialogContent>
     </Dialog>

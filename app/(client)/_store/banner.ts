@@ -1,30 +1,34 @@
 import { create } from "zustand";
 
-type TTraitFormSchema = {
+type TBannerSchema = {
   id: string;
-  name: string;
+  type: string;
+  imageUrl: string;
+  redirectUrl: string;
 };
 
-type TraitFormStore = {
+type BannerStore = {
   dialogOpen: boolean;
   action: "ADD" | "UPDATE";
-  trait: TTraitFormSchema;
-  setTrait: (trait: TTraitFormSchema) => void;
+  banner: TBannerSchema;
+  setBanner: (banner: TBannerSchema) => void;
   setAction: (action: "ADD" | "UPDATE") => void;
-  resetTrait: () => void;
+  resetBanner: () => void;
   setDialogOpen: (value: boolean) => void;
 };
 
-export const useTraitFormStore = create<TraitFormStore>((set) => ({
+export const useBannerStore = create<BannerStore>((set) => ({
   dialogOpen: false,
   action: "ADD",
-  trait: {
+  banner: {
     id: "",
-    name: "",
+    type: "",
+    imageUrl: "",
+    redirectUrl: "",
   },
-  setTrait: (newTrait) => {
+  setBanner: (newBanner) => {
     set((prevState) => ({
-      trait: { ...prevState.trait, ...newTrait },
+      banner: { ...prevState.banner, ...newBanner },
     }));
   },
   setAction: (newAction) => {
@@ -32,12 +36,14 @@ export const useTraitFormStore = create<TraitFormStore>((set) => ({
       action: newAction,
     });
   },
-  resetTrait: () => {
+  resetBanner: () => {
     set({
       action: "ADD",
-      trait: {
+      banner: {
         id: "",
-        name: "",
+        type: "",
+        imageUrl: "",
+        redirectUrl: "",
       },
       dialogOpen: false,
     });
@@ -47,9 +53,11 @@ export const useTraitFormStore = create<TraitFormStore>((set) => ({
       set({
         dialogOpen: value,
         action: "ADD",
-        trait: {
+        banner: {
           id: "",
-          name: "",
+          type: "",
+          imageUrl: "",
+          redirectUrl: "",
         },
       });
     } else {

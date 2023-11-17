@@ -32,13 +32,13 @@ type formSchema = z.infer<typeof BannerFormSchema>;
 interface BannerFormProps {
   action: "ADD" | "UPDATE";
   banner: Banner;
-  resetTrait: () => void;
+  resetBanner: () => void;
 }
 
 const BannerForm: React.FC<BannerFormProps> = ({
   action,
   banner,
-  resetTrait,
+  resetBanner,
 }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -52,29 +52,31 @@ const BannerForm: React.FC<BannerFormProps> = ({
       redirectUrl: "",
     },
     values: {
-      id: "",
-      type: "",
-      imageUrl: "",
-      redirectUrl: "",
+      id: banner.id,
+      type: banner.type,
+      imageUrl: banner.imageUrl,
+      redirectUrl: banner.redirectUrl,
     },
   });
 
   async function onSubmit(values: formSchema) {
-    const { id, name } = values;
+    const { id, imageUrl, redirectUrl, type } = values;
 
     setLoading(true);
 
     await axios
-      .post("/api/admin/trait", {
+      .post("/api/admin/banner", {
         id,
-        name,
+        type,
+        imageUrl,
+        redirectUrl,
       })
       .then(() => {
         toast.success("Added");
         router.refresh();
-        resetTrait();
+        resetBanner();
       })
-      .catch((err) => toast.error(`Unable to add new trait: ${err?.message}`))
+      .catch((err) => toast.error(`Unable to add new banner: ${err?.message}`))
       .finally(() => setLoading(false));
   }
 
@@ -83,16 +85,46 @@ const BannerForm: React.FC<BannerFormProps> = ({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="name"
+          name="type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Trait Name</FormLabel>
+              <FormLabel>Type</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
               <FormDescription>
-                This is a trait for product. E.g TRENDING, DISCOUNTED,...
+                E.g OFFER_BANNER, DEAL_BANNER, CAROUSEL_BANNER,...
               </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="imageUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Image URL</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormDescription>
+                E.g https://www.edgestore.com/s3/asfadfas.jpg
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="redirectUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Redirect URL</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormDescription>E.g /products/aslfjgkladjcmsd</FormDescription>
               <FormMessage />
             </FormItem>
           )}
