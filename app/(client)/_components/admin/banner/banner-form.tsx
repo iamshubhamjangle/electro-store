@@ -66,28 +66,30 @@ const BannerForm: React.FC<BannerFormProps> = ({
     const { id, redirectUrl, type } = values;
     let imageUrl = "";
 
-    setLoading(true);
-    setUploadProgress(0);
-
-    if (!file) {
+    if (!file && !banner.imageUrl) {
       toast.error("Image is required.");
       return;
     }
 
-    await edgestore.publicFiles
-      .upload({
-        file,
-        onProgressChange: (progress) => {
-          setUploadProgress(progress);
-        },
-      })
-      .then((res) => {
-        imageUrl = res.url;
-      })
-      .catch((err) => {
-        console.error("Image upload failed:", err);
-        toast.error("Image upload failed.");
-      });
+    setLoading(true);
+    setUploadProgress(0);
+
+    if (file) {
+      await edgestore.publicFiles
+        .upload({
+          file,
+          onProgressChange: (progress) => {
+            setUploadProgress(progress);
+          },
+        })
+        .then((res) => {
+          imageUrl = res.url;
+        })
+        .catch((err) => {
+          console.error("Image upload failed:", err);
+          toast.error("Image upload failed.");
+        });
+    }
 
     await axios
       .post("/api/admin/banner", {
@@ -112,7 +114,7 @@ const BannerForm: React.FC<BannerFormProps> = ({
           <SingleImageDropzone
             width={200}
             height={200}
-            value={file}
+            value={file || banner.imageUrl}
             onChange={(file) => setFile(file)}
           />
           <Progress value={uploadProgress} />

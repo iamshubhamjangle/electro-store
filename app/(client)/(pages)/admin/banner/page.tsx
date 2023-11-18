@@ -1,5 +1,7 @@
-import { NewBannerButton } from "@/app/(client)/_components/admin/banner";
 import prisma from "@/app/_lib/db";
+import { DataTable } from "@/component/data-table";
+import { NewBannerButton } from "@/app/(client)/_components/admin/banner";
+import bannerColumn from "@/app/(client)/_components/admin/banner/banner-column";
 
 const Page = async () => {
   const banners = await prisma.banner.findMany();
@@ -7,7 +9,7 @@ const Page = async () => {
   return (
     <div className="space-y-4">
       <NewBannerButton />
-      <pre>{JSON.stringify(banners, null, 2)}</pre>
+      <DataTable columns={bannerColumn} data={banners} />
     </div>
   );
 };
