@@ -86,11 +86,12 @@ model Product {
 }
 
 model Category {
-  id          String    @id @default(cuid())
-  name        String
-  imageUrl    String
-  redirectUrl String
-  product     Product[]
+  id             String    @id @default(cuid())
+  name           String
+  imageUrl       String
+  bannerImageUrl String
+  redirectUrl    String
+  product        Product[]
 
   @@schema("electro")
 }

@@ -9,11 +9,11 @@ import {
   DialogTrigger,
 } from "@/component/dialog";
 import { Button } from "@/component/button";
-import BannerForm from "./banner-form";
-import { useBannerStore } from "@/app/(client)/_store/banner";
+import CategoryForm from "./category-form";
+import { useCategoryStore } from "@/app/(client)/_store/category";
 
-const NewBannerButton = () => {
-  const store = useBannerStore();
+const NewCategoryButton = () => {
+  const store = useCategoryStore();
   const { dialogOpen, setDialogOpen } = store;
 
   return (
@@ -25,19 +25,19 @@ const NewBannerButton = () => {
       </DialogTrigger>
       <DialogContent className="max-w-3xl max-h-[80vh] overflow-auto">
         <DialogHeader>
-          <DialogTitle>Banner</DialogTitle>
+          <DialogTitle>Category</DialogTitle>
           <DialogDescription>
             Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-        <BannerForm
+        <CategoryForm
           action={store.action}
-          banner={store.banner}
-          resetBanner={store.resetBanner}
+          category={store.category}
+          resetCategory={store.resetCategory}
         />
       </DialogContent>
     </Dialog>
   );
 };
 
-export default NewBannerButton;
+export default NewCategoryButton;

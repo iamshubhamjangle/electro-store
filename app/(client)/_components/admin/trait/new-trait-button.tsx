@@ -24,7 +24,7 @@ const TraitNewButton = () => {
           <Button size={"lg"}>New</Button>
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="max-w-3xl max-h-[80vh] overflow-auto">
         <DialogHeader>
           <DialogTitle>Trait</DialogTitle>
           <DialogDescription>

@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     // const userId = session.user?.id;
 
     const body = await req.json();
-    const { id, name, imageUrl, redirectUrl }: Category = body;
+    const { id, name, imageUrl, bannerImageUrl, redirectUrl }: Category = body;
 
     if (!name || !redirectUrl) {
       return new NextResponse("Missing Fields", { status: 400 });
@@ -23,11 +23,13 @@ export async function POST(req: NextRequest) {
       create: {
         name,
         imageUrl,
+        bannerImageUrl,
         redirectUrl,
       },
       update: {
         name,
         imageUrl: imageUrl || undefined,
+        bannerImageUrl: bannerImageUrl || undefined,
         redirectUrl,
       },
       where: {
