@@ -1,31 +1,27 @@
-import { NextRequest, NextResponse } from "next/server";
-
-import prisma from "@/app/_lib/db";
-import { serverAuth } from "@/app/_lib/serverAuth";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { Trait } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/app/_lib/db";
 
-export async function POST(req: NextRequest) {
+export type TCategoryDeleteRequestBody = {
+  id: string;
+};
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: TCategoryDeleteRequestBody }
+) {
   try {
     // // Authentication
     // const session = await serverAuth();
-    // if (!session) return new NextResponse("Please login....", { status: 401 });
+    // if (!session) return new NextResponse("Unauthorized", { status: 401 });
     // const userId = session.user?.id;
+    const { id } = params;
 
-    const body = await req.json();
-    const { id, name }: Trait = body;
-
-    if (!name) {
+    if (!id) {
       return new NextResponse("Missing Fields", { status: 400 });
     }
 
-    await prisma.trait.upsert({
-      create: {
-        name,
-      },
-      update: {
-        name,
-      },
+    await prisma.category.delete({
       where: {
         id,
       },
@@ -33,7 +29,10 @@ export async function POST(req: NextRequest) {
 
     return new NextResponse("Success");
   } catch (error) {
-    console.error("<<< ERROR::POST::api/admin/trait >>>", error);
+    console.error(
+      `<<< ERROR::DELETE::api/admin/category/${params.id} >>>`,
+      error
+    );
     if (error instanceof PrismaClientKnownRequestError) {
       return new NextResponse("Unauthorized", { status: 401 });
     }

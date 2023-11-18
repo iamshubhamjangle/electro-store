@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/_lib/db";
 import { serverAuth } from "@/app/_lib/serverAuth";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { Trait } from "@prisma/client";
+import { Category } from "@prisma/client";
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,18 +13,22 @@ export async function POST(req: NextRequest) {
     // const userId = session.user?.id;
 
     const body = await req.json();
-    const { id, name }: Trait = body;
+    const { id, name, imageUrl, redirectUrl }: Category = body;
 
-    if (!name) {
+    if (!name || !redirectUrl) {
       return new NextResponse("Missing Fields", { status: 400 });
     }
 
-    await prisma.trait.upsert({
+    await prisma.category.upsert({
       create: {
         name,
+        imageUrl,
+        redirectUrl,
       },
       update: {
         name,
+        imageUrl: imageUrl || undefined,
+        redirectUrl,
       },
       where: {
         id,
@@ -33,7 +37,7 @@ export async function POST(req: NextRequest) {
 
     return new NextResponse("Success");
   } catch (error) {
-    console.error("<<< ERROR::POST::api/admin/trait >>>", error);
+    console.error("<<< ERROR::POST::api/admin/category >>>", error);
     if (error instanceof PrismaClientKnownRequestError) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
