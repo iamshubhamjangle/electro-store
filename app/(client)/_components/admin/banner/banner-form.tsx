@@ -19,10 +19,12 @@ import {
 import { Button } from "@/component/button";
 import { Input } from "@/component/input";
 import { Banner } from "@prisma/client";
+import { SingleImageDropzone } from "../../ui/single-image-dropzone";
+import { useEdgeStore } from "@/app/_lib/edgestore";
+import { Progress } from "../../ui/progress";
 
 const BannerFormSchema = z.object({
   id: z.string().optional(),
-  imageUrl: z.string().min(1),
   redirectUrl: z.string().min(1),
   type: z.string().min(1).max(50).toUpperCase(),
 });
@@ -41,28 +43,51 @@ const BannerForm: React.FC<BannerFormProps> = ({
   resetBanner,
 }) => {
   const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const router = useRouter();
+  const [file, setFile] = useState<File>();
+  const { edgestore } = useEdgeStore();
 
   const form = useForm<formSchema>({
     resolver: zodResolver(BannerFormSchema),
     defaultValues: {
       id: "",
       type: "",
-      imageUrl: "",
       redirectUrl: "",
     },
     values: {
       id: banner.id,
       type: banner.type,
-      imageUrl: banner.imageUrl,
       redirectUrl: banner.redirectUrl,
     },
   });
 
   async function onSubmit(values: formSchema) {
-    const { id, imageUrl, redirectUrl, type } = values;
+    const { id, redirectUrl, type } = values;
+    let imageUrl = "";
 
     setLoading(true);
+    setUploadProgress(0);
+
+    if (!file) {
+      toast.error("Image is required.");
+      return;
+    }
+
+    await edgestore.publicFiles
+      .upload({
+        file,
+        onProgressChange: (progress) => {
+          setUploadProgress(progress);
+        },
+      })
+      .then((res) => {
+        imageUrl = res.url;
+      })
+      .catch((err) => {
+        console.error("Image upload failed:", err);
+        toast.error("Image upload failed.");
+      });
 
     await axios
       .post("/api/admin/banner", {
@@ -83,6 +108,15 @@ const BannerForm: React.FC<BannerFormProps> = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="w-fit">
+          <SingleImageDropzone
+            width={200}
+            height={200}
+            value={file}
+            onChange={(file) => setFile(file)}
+          />
+          <Progress value={uploadProgress} />
+        </div>
         <FormField
           control={form.control}
           name="type"
@@ -101,22 +135,6 @@ const BannerForm: React.FC<BannerFormProps> = ({
         />
         <FormField
           control={form.control}
-          name="imageUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Image URL</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription>
-                E.g https://www.edgestore.com/s3/asfadfas.jpg
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="redirectUrl"
           render={({ field }) => (
             <FormItem>
@@ -124,7 +142,7 @@ const BannerForm: React.FC<BannerFormProps> = ({
               <FormControl>
                 <Input {...field} />
               </FormControl>
-              <FormDescription>E.g /products/aslfjgkladjcmsd</FormDescription>
+              <FormDescription>E.g /products/unique-product-id</FormDescription>
               <FormMessage />
             </FormItem>
           )}
