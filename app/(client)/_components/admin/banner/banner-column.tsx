@@ -17,7 +17,12 @@ const bannerColumn: ColumnDef<Banner>[] = [
     accessorKey: "imageUrl",
     header: () => <div className="font-bold">Image</div>,
     cell: ({ row }) => (
-      <Image src={row.original.imageUrl} alt="Image" width={100} height={100} />
+      <Image
+        src={row.original.imageUrl || "/dummy.png"}
+        alt="Image"
+        width={100}
+        height={100}
+      />
     ),
   },
   {

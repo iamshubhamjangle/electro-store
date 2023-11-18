@@ -42,11 +42,12 @@ const BannerForm: React.FC<BannerFormProps> = ({
   banner,
   resetBanner,
 }) => {
+  const router = useRouter();
+  const { edgestore } = useEdgeStore();
+
+  const [file, setFile] = useState<File>();
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const router = useRouter();
-  const [file, setFile] = useState<File>();
-  const { edgestore } = useEdgeStore();
 
   const form = useForm<formSchema>({
     resolver: zodResolver(BannerFormSchema),
@@ -75,19 +76,23 @@ const BannerForm: React.FC<BannerFormProps> = ({
     setUploadProgress(0);
 
     if (file) {
-      await edgestore.publicFiles
+      await edgestore.publicImages
         .upload({
           file,
+          input: {
+            category: "banner",
+          },
           onProgressChange: (progress) => {
             setUploadProgress(progress);
           },
         })
         .then((res) => {
+          console.log("Image uplaoded", res);
           imageUrl = res.url;
         })
         .catch((err) => {
-          console.error("Image upload failed:", err);
-          toast.error("Image upload failed.");
+          console.error("Image upload failed:", err.message);
+          toast.error(`Image upload failed`);
         });
     }
 
