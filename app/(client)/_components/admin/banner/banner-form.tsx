@@ -45,9 +45,9 @@ const BannerForm: React.FC<BannerFormProps> = ({
   const router = useRouter();
   const { edgestore } = useEdgeStore();
 
-  const [file, setFile] = useState<File>();
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [localBannerImage, setLocalBannerImage] = useState<File>();
 
   const form = useForm<formSchema>({
     resolver: zodResolver(BannerFormSchema),
@@ -67,7 +67,7 @@ const BannerForm: React.FC<BannerFormProps> = ({
     const { id, redirectUrl, type } = values;
     let imageUrl = "";
 
-    if (!file && !banner.imageUrl) {
+    if (!localBannerImage && !banner.imageUrl) {
       toast.error("Image is required.");
       return;
     }
@@ -75,10 +75,10 @@ const BannerForm: React.FC<BannerFormProps> = ({
     setLoading(true);
     setUploadProgress(0);
 
-    if (file) {
+    if (localBannerImage) {
       await edgestore.publicImages
         .upload({
-          file,
+          file: localBannerImage,
           input: {
             category: "banner",
           },
@@ -119,10 +119,15 @@ const BannerForm: React.FC<BannerFormProps> = ({
           <SingleImageDropzone
             width={200}
             height={200}
-            value={file || banner.imageUrl}
-            onChange={(file) => setFile(file)}
+            value={localBannerImage || banner.imageUrl}
+            onChange={(localBannerImage) =>
+              setLocalBannerImage(localBannerImage)
+            }
           />
           <Progress value={uploadProgress} />
+          <FormDescription>
+            Max-size: 1mb (JPEG & PNG supported)
+          </FormDescription>
         </div>
         <FormField
           control={form.control}
