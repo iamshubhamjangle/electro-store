@@ -3,16 +3,16 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import Image from "next/image";
-import { Banner } from "@prisma/client";
+import { Category } from "@prisma/client";
 import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 import { Edit, Trash2 } from "lucide-react";
 
-import { useBannerStore } from "@/app/(client)/_store/banner";
 import { Button } from "@/component/button";
+import { useCategoryStore } from "@/app/(client)/_store/category";
 
-const bannerColumn: ColumnDef<Banner>[] = [
+const categoryColumn: ColumnDef<Category>[] = [
   {
     accessorKey: "imageUrl",
     header: () => <div className="font-bold">Image</div>,
@@ -26,8 +26,20 @@ const bannerColumn: ColumnDef<Banner>[] = [
     ),
   },
   {
-    accessorKey: "type",
-    header: () => <div className="font-bold">Type</div>,
+    accessorKey: "bannerImageUrl",
+    header: () => <div className="font-bold">Banner Image</div>,
+    cell: ({ row }) => (
+      <Image
+        src={row.original.bannerImageUrl || "/dummy.png"}
+        alt="Image"
+        width={100}
+        height={100}
+      />
+    ),
+  },
+  {
+    accessorKey: "name",
+    header: () => <div className="font-bold">Name</div>,
   },
   {
     accessorKey: "redirectUrl",
@@ -43,10 +55,10 @@ const bannerColumn: ColumnDef<Banner>[] = [
   },
 ];
 
-export default bannerColumn;
+export default categoryColumn;
 
 const ActionRow: React.FC<any> = ({ row }) => {
-  const store = useBannerStore();
+  const store = useCategoryStore();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -54,13 +66,13 @@ const ActionRow: React.FC<any> = ({ row }) => {
     setLoading(true);
 
     await axios
-      .delete(`/api/admin/banner/${id}`)
+      .delete(`/api/admin/category/${id}`)
       .then(() => {
         toast.success("Deleted");
         router.refresh();
-        store.resetBanner();
+        store.resetCategory();
       })
-      .catch((err) => toast.error(`Unable to delete banner: ${err?.message}`))
+      .catch((err) => toast.error(`Unable to delete category: ${err?.message}`))
       .finally(() => setLoading(false));
   };
 
@@ -72,7 +84,7 @@ const ActionRow: React.FC<any> = ({ row }) => {
         loading={loading}
         onClick={() => {
           store.setAction("UPDATE");
-          store.setBanner(row.original);
+          store.setCategory(row.original);
           store.setDialogOpen(true);
         }}
       >
