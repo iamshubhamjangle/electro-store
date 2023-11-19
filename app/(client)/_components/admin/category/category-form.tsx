@@ -23,6 +23,7 @@ import { Button } from "@/component/button";
 import { Input } from "@/component/input";
 import { Progress } from "@/component/progress";
 import { SingleImageDropzone } from "@/component/single-image-dropzone";
+import SingleImageDropzoneWrapper from "@/component//single-image-dropzone-wrapper";
 
 const CategoryFormSchema = z.object({
   id: z.string().optional(),
@@ -150,36 +151,19 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="w-fit">
-          <FormLabel>Image</FormLabel>
-          <SingleImageDropzone
-            width={200}
-            height={200}
-            value={localCategoryImage || category.imageUrl}
-            onChange={(localCategoryImage) =>
-              setLocalCategoryImage(localCategoryImage)
-            }
-          />
-          <Progress value={uploadProgress} />
-          <FormDescription>
-            Max-size: 1mb (JPEG & PNG supported)
-          </FormDescription>
-        </div>
-        <div className="w-fit">
-          <FormLabel>Banner Image</FormLabel>
-          <SingleImageDropzone
-            width={200}
-            height={200}
-            value={localCategoryBannerImage || category.bannerImageUrl}
-            onChange={(localCategoryBannerImage) =>
-              setLocalCategoryBannerImage(localCategoryBannerImage)
-            }
-          />
-          <Progress value={uploadProgressBannerImage} />
-          <FormDescription>
-            Max-size: 1mb (JPEG & PNG supported)
-          </FormDescription>
-        </div>
+        <SingleImageDropzoneWrapper
+          localImage={localCategoryImage}
+          localImageSetter={setLocalCategoryImage}
+          backupImage={category.imageUrl}
+          uploadProgress={uploadProgress}
+        />
+        <SingleImageDropzoneWrapper
+          label="Banner Image"
+          localImage={localCategoryBannerImage}
+          localImageSetter={setLocalCategoryBannerImage}
+          backupImage={category.bannerImageUrl}
+          uploadProgress={uploadProgressBannerImage}
+        />
         <FormField
           control={form.control}
           name="name"

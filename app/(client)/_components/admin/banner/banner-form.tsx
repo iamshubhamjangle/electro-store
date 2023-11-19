@@ -16,12 +16,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/component/form";
+import { Banner } from "@prisma/client";
+import { useEdgeStore } from "@/app/_lib/edgestore";
 import { Button } from "@/component/button";
 import { Input } from "@/component/input";
-import { Banner } from "@prisma/client";
-import { SingleImageDropzone } from "../../ui/single-image-dropzone";
-import { useEdgeStore } from "@/app/_lib/edgestore";
-import { Progress } from "../../ui/progress";
+import SingleImageDropzoneWrapper from "@/component/single-image-dropzone-wrapper";
 
 const BannerFormSchema = z.object({
   id: z.string().optional(),
@@ -115,20 +114,12 @@ const BannerForm: React.FC<BannerFormProps> = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="w-fit">
-          <SingleImageDropzone
-            width={200}
-            height={200}
-            value={localBannerImage || banner.imageUrl}
-            onChange={(localBannerImage) =>
-              setLocalBannerImage(localBannerImage)
-            }
-          />
-          <Progress value={uploadProgress} />
-          <FormDescription>
-            Max-size: 1mb (JPEG & PNG supported)
-          </FormDescription>
-        </div>
+        <SingleImageDropzoneWrapper
+          localImage={localBannerImage}
+          localImageSetter={setLocalBannerImage}
+          backupImage={banner.imageUrl}
+          uploadProgress={uploadProgress}
+        />
         <FormField
           control={form.control}
           name="type"
