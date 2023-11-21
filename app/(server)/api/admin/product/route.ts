@@ -37,6 +37,9 @@ export async function POST(req: NextRequest) {
       return new NextResponse("Missing Fields", { status: 400 });
     }
 
+    const parsedSellingPrice = parseInt(sellingPrice) || 0;
+    const parsedMaximumRetailPrice = parseInt(maximumRetailPrice) || 0;
+
     await prisma.product.upsert({
       create: {
         title,
@@ -44,8 +47,8 @@ export async function POST(req: NextRequest) {
         description: description || undefined,
         imageUrls,
         categoryId: categoryId || undefined,
-        sellingPrice: parseInt(sellingPrice),
-        maximumRetailPrice: parseInt(maximumRetailPrice),
+        sellingPrice: parsedSellingPrice,
+        maximumRetailPrice: parsedMaximumRetailPrice,
         manufacturer: manufacturer || undefined,
         rating,
       },
@@ -55,8 +58,8 @@ export async function POST(req: NextRequest) {
         description: description || undefined,
         imageUrls,
         categoryId: categoryId || undefined,
-        sellingPrice: parseInt(sellingPrice),
-        maximumRetailPrice: parseInt(maximumRetailPrice),
+        sellingPrice: parsedSellingPrice,
+        maximumRetailPrice: parsedMaximumRetailPrice,
         manufacturer: manufacturer || undefined,
         rating,
       },
