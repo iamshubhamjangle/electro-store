@@ -1,3 +1,5 @@
+- Improve Forms: Use strings only. Remove any @prisma types imported.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Setting up new yarn nextjs project
