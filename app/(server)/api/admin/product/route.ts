@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/_lib/db";
 import { serverAuth } from "@/app/_lib/serverAuth";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { Product } from "@prisma/client";
+import { ProductFormType } from "@/types/form-schemas";
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,14 +24,12 @@ export async function POST(req: NextRequest) {
       maximumRetailPrice,
       manufacturer,
       rating,
-    }: Product = body;
+    }: ProductFormType = body;
 
     if (
       !title ||
       !subTitle ||
-      !description ||
       !imageUrls ||
-      !categoryId ||
       !sellingPrice ||
       !maximumRetailPrice ||
       !rating
@@ -43,23 +41,23 @@ export async function POST(req: NextRequest) {
       create: {
         title,
         subTitle,
-        description,
+        description: description || undefined,
         imageUrls,
-        categoryId,
-        sellingPrice,
-        maximumRetailPrice,
-        manufacturer,
+        categoryId: categoryId || undefined,
+        sellingPrice: parseInt(sellingPrice),
+        maximumRetailPrice: parseInt(maximumRetailPrice),
+        manufacturer: manufacturer || undefined,
         rating,
       },
       update: {
         title,
         subTitle,
-        description,
+        description: description || undefined,
         imageUrls,
-        categoryId,
-        sellingPrice,
-        maximumRetailPrice,
-        manufacturer,
+        categoryId: categoryId || undefined,
+        sellingPrice: parseInt(sellingPrice),
+        maximumRetailPrice: parseInt(maximumRetailPrice),
+        manufacturer: manufacturer || undefined,
         rating,
       },
       where: {

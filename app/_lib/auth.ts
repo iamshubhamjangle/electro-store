@@ -16,7 +16,7 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === "development",
   callbacks: {
-    // Extra properties mentioned here should be present in @/app/_types/next-auth.d.ts
+    // Extra properties mentioned here should be present in @/types/next-auth.d.ts
     // jwt callback is called first, then session callback is called
     // Anything set in jwt callback is available in session callback
     jwt: async ({ token, user }) => {

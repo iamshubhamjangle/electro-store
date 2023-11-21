@@ -2,7 +2,6 @@
 
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Product } from "@prisma/client";
 import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
@@ -10,8 +9,9 @@ import { Edit, Trash2 } from "lucide-react";
 
 import { Button } from "@/component/button";
 import { useProductStore } from "@/app/(client)/_store/product";
+import { ProductFormType } from "@/app/_types/form-schemas";
 
-const productColumn: ColumnDef<Product>[] = [
+const productColumn: ColumnDef<ProductFormType>[] = [
   {
     accessorKey: "title",
     header: () => <div className="font-bold">Title</div>,
@@ -57,13 +57,13 @@ const ActionRow: React.FC<any> = ({ row }) => {
     setLoading(true);
 
     await axios
-      .delete(`/api/admin/category/${id}`)
+      .delete(`/api/admin/product/${id}`)
       .then(() => {
         toast.success("Deleted");
         router.refresh();
         store.resetProduct();
       })
-      .catch((err) => toast.error(`Unable to delete category: ${err?.message}`))
+      .catch((err) => toast.error(`Unable to delete product: ${err?.message}`))
       .finally(() => setLoading(false));
   };
 

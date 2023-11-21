@@ -1,47 +1,33 @@
+import { ProductFormType } from "@/app/_types/form-schemas";
 import { create } from "zustand";
-
-type TProductSchema = {
-  id: string;
-  title: string;
-  subTitle: string;
-  description: string | null;
-  imageUrls: string[];
-  categoryId: string | null;
-  sellingPrice: number;
-  maximumRetailPrice: number;
-  manufacturer: string | null;
-  rating: any;
-  createdAt: any;
-  updatedAt: any;
-};
 
 type ProductStore = {
   dialogOpen: boolean;
   action: "ADD" | "UPDATE";
-  product: TProductSchema;
-  setProduct: (product: TProductSchema) => void;
+  product: ProductFormType;
+  setProduct: (product: ProductFormType) => void;
   setAction: (action: "ADD" | "UPDATE") => void;
   resetProduct: () => void;
   setDialogOpen: (value: boolean) => void;
 };
 
+const initialValueProduct: ProductFormType = {
+  id: "",
+  title: "",
+  subTitle: "",
+  description: "",
+  imageUrls: [],
+  categoryId: "",
+  manufacturer: "",
+  sellingPrice: "",
+  maximumRetailPrice: "",
+  rating: "",
+};
+
 export const useProductStore = create<ProductStore>((set) => ({
   dialogOpen: false,
   action: "ADD",
-  product: {
-    id: "",
-    title: "",
-    subTitle: "",
-    description: "",
-    imageUrls: [],
-    categoryId: "",
-    manufacturer: "",
-    sellingPrice: 0,
-    maximumRetailPrice: 0,
-    rating: 0,
-    createdAt: "",
-    updatedAt: "",
-  },
+  product: initialValueProduct,
   setProduct: (newProduct) => {
     set((prevState) => ({
       product: { ...prevState.product, ...newProduct },
@@ -55,20 +41,7 @@ export const useProductStore = create<ProductStore>((set) => ({
   resetProduct: () => {
     set({
       action: "ADD",
-      product: {
-        id: "",
-        title: "",
-        subTitle: "",
-        description: "",
-        imageUrls: [],
-        categoryId: "",
-        manufacturer: "",
-        sellingPrice: 0,
-        maximumRetailPrice: 0,
-        rating: 0,
-        createdAt: "",
-        updatedAt: "",
-      },
+      product: initialValueProduct,
       dialogOpen: false,
     });
   },
@@ -77,20 +50,7 @@ export const useProductStore = create<ProductStore>((set) => ({
       set({
         dialogOpen: value,
         action: "ADD",
-        product: {
-          id: "",
-          title: "",
-          subTitle: "",
-          description: "",
-          imageUrls: [],
-          categoryId: "",
-          manufacturer: "",
-          sellingPrice: 0,
-          maximumRetailPrice: 0,
-          rating: 0,
-          createdAt: "",
-          updatedAt: "",
-        },
+        product: initialValueProduct,
       });
     } else {
       set({

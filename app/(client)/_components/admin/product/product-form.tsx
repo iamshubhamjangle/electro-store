@@ -1,10 +1,8 @@
 "use client";
 
-import * as z from "zod";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { Product } from "@prisma/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,25 +20,11 @@ import {
 import { Button } from "@/component/button";
 import { Input } from "@/component/input";
 import SingleImageDropzoneWrapper from "@/component//single-image-dropzone-wrapper";
-
-const ProductFormSchema = z.object({
-  id: z.string().optional(),
-  title: z.string(),
-  subTitle: z.string(),
-  description: z.string(),
-  imageUrls: z.string().array(),
-  categoryId: z.string(),
-  sellingPrice: z.number(),
-  maximumRetailPrice: z.number(),
-  manufacturer: z.string(),
-  rating: z.any(),
-});
-
-type formSchema = z.infer<typeof ProductFormSchema>;
+import { ProductFormSchema, ProductFormType } from "@/types/form-schemas";
 
 interface ProductFormProps {
   action: "ADD" | "UPDATE";
-  product: Product;
+  product: ProductFormType;
   resetProduct: () => void;
 }
 
@@ -54,12 +38,9 @@ const ProductForm: React.FC<ProductFormProps> = ({
 
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [localProductImage, setLocalProductImage] = useState<File>();
-  const [localProductBannerImage, setLocalProductBannerImage] =
-    useState<File>();
-  const [uploadProgressBannerImage, setUploadProgressBannerImage] = useState(0);
+  const [localProductImages, setLocalProductImages] = useState<File[]>();
 
-  const form = useForm<formSchema>({
+  const form = useForm<ProductFormType>({
     resolver: zodResolver(ProductFormSchema),
     defaultValues: {
       id: "",
@@ -68,26 +49,26 @@ const ProductForm: React.FC<ProductFormProps> = ({
       description: "",
       imageUrls: [],
       categoryId: "",
-      sellingPrice: 0,
-      maximumRetailPrice: 0,
+      sellingPrice: "",
+      maximumRetailPrice: "",
       manufacturer: "",
-      rating: 0,
+      rating: "",
     },
     values: {
       id: product.id,
       title: product.title,
       subTitle: product.subTitle,
-      description: product.description || "",
+      description: product.description,
       imageUrls: product.imageUrls,
-      categoryId: product.categoryId || "",
-      sellingPrice: product.sellingPrice,
-      maximumRetailPrice: product.maximumRetailPrice,
-      manufacturer: product.manufacturer || "",
-      rating: product.rating,
+      categoryId: product.categoryId,
+      sellingPrice: product.sellingPrice.toString(),
+      maximumRetailPrice: product.maximumRetailPrice.toString(),
+      manufacturer: product.manufacturer,
+      rating: product.rating.toString(),
     },
   });
 
-  async function onSubmit(values: formSchema) {
+  async function onSubmit(values: ProductFormType) {
     const {
       id,
       title,
@@ -97,14 +78,12 @@ const ProductForm: React.FC<ProductFormProps> = ({
       categoryId,
       sellingPrice,
       maximumRetailPrice,
+      manufacturer,
       rating,
     } = values;
-    let imageUrl = "";
-    let bannerImageUrl = "";
 
     setLoading(true);
     setUploadProgress(0);
-    setUploadProgressBannerImage(0);
 
     await axios
       .post("/api/admin/product", {
@@ -116,6 +95,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
         categoryId,
         sellingPrice,
         maximumRetailPrice,
+        manufacturer,
         rating,
       })
       .then(() => {
@@ -186,19 +166,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
         />
         <FormField
           control={form.control}
-          name="imageUrls"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>ImageURLs</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="categoryId"
           render={({ field }) => (
             <FormItem>
@@ -229,6 +196,19 @@ const ProductForm: React.FC<ProductFormProps> = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>MRP</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="manufacturer"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Manufacturer</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
