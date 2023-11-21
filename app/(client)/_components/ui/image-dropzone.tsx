@@ -67,51 +67,51 @@ const useImageDropzone = (multiple: boolean): ImageDropzoneHook => {
             Drag and drop dropzoneImages here, or click to select dropzoneImages
           </p>
         </div>
-        {dropzoneImages.length > 0 && (
-          <CardContent className="pt-6">
-            <div className="flex flex-wrap">
-              {dropzoneImages.map((image, index) => (
-                <div
-                  key={index}
-                  style={{ position: "relative", marginRight: "10px" }}
-                >
-                  <Image
-                    src={URL.createObjectURL(image)}
-                    width={100}
-                    height={100}
-                    alt={`Preview ${index}`}
-                    style={{
-                      maxWidth: "100px",
-                      maxHeight: "100px",
-                      border: "1px solid #ccc",
-                    }}
-                  />
-                  <button
-                    onClick={() => removeImage(index)}
-                    type="button"
-                    style={{
-                      position: "absolute",
-                      top: "5px",
-                      right: "5px",
-                      background: "transparent",
-                      border: "none",
-                      cursor: "pointer",
-                      padding: "0",
-                      zIndex: 1,
-                    }}
+        <div className="p-4 space-y-4">
+          {dropzoneImages.length > 0 && (
+            <div>
+              <div className="flex flex-wrap">
+                {dropzoneImages.map((image, index) => (
+                  <div
+                    key={index}
+                    style={{ position: "relative", marginRight: "10px" }}
                   >
-                    <X size={18} color="red" />
-                  </button>
-                </div>
-              ))}
+                    <Image
+                      src={URL.createObjectURL(image)}
+                      width={100}
+                      height={100}
+                      alt={`Preview ${index}`}
+                      style={{
+                        maxWidth: "100px",
+                        maxHeight: "100px",
+                        border: "1px solid #ccc",
+                      }}
+                    />
+                    <button
+                      onClick={() => removeImage(index)}
+                      type="button"
+                      style={{
+                        position: "absolute",
+                        top: "5px",
+                        right: "5px",
+                        background: "transparent",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: "0",
+                        zIndex: 1,
+                      }}
+                    >
+                      <X size={18} color="red" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
-          </CardContent>
-        )}
-        <CardFooter>
-          <span className="text-sm text-muted-foreground">
+          )}
+          <div className="text-sm text-muted-foreground">
             Supported images: JPG/PNG. Max Size: 1MB.
-          </span>
-        </CardFooter>
+          </div>
+        </div>
       </Card>
     </div>
   );
