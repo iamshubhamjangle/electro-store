@@ -3,17 +3,18 @@
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { X } from "lucide-react"; // Assuming the X icon from lucide-react is available
-import { Card, CardContent } from "./card";
-import { useState, useCallback } from "react";
+import { Card, CardContent, CardFooter } from "./card";
+import { useState, useCallback, Dispatch, SetStateAction } from "react";
 import { useDropzone, FileRejection } from "react-dropzone";
 
 type ImageDropzoneHook = {
   DropzoneComponent: JSX.Element;
-  images: File[];
+  dropzoneImages: File[];
+  setDropzoneImages: Dispatch<SetStateAction<File[]>>;
 };
 
 const useImageDropzone = (multiple: boolean): ImageDropzoneHook => {
-  const [images, setImages] = useState<File[]>([]);
+  const [dropzoneImages, setDropzoneImages] = useState<File[]>([]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
@@ -23,17 +24,19 @@ const useImageDropzone = (multiple: boolean): ImageDropzoneHook => {
 
       if (acceptedFiles.length > 0) {
         if (!multiple) {
-          setImages([acceptedFiles[0]]);
+          setDropzoneImages([acceptedFiles[0]]);
         } else {
           const uniqueFiles = acceptedFiles.filter(
             (file) =>
-              !images.some((existingFile) => existingFile.name === file.name)
+              !dropzoneImages.some(
+                (existingFile) => existingFile.name === file.name
+              )
           );
-          setImages([...images, ...uniqueFiles]);
+          setDropzoneImages([...dropzoneImages, ...uniqueFiles]);
         }
       }
     },
-    [images, multiple]
+    [dropzoneImages, multiple]
   );
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -45,9 +48,9 @@ const useImageDropzone = (multiple: boolean): ImageDropzoneHook => {
   });
 
   const removeImage = (index: number) => {
-    const updatedImages = [...images];
+    const updatedImages = [...dropzoneImages];
     updatedImages.splice(index, 1);
-    setImages(updatedImages);
+    setDropzoneImages(updatedImages);
   };
 
   const DropzoneComponent = (
@@ -61,13 +64,13 @@ const useImageDropzone = (multiple: boolean): ImageDropzoneHook => {
         >
           <input {...getInputProps()} />
           <p className="text-sm text-muted-foreground">
-            Drag and drop images here, or click to select images
+            Drag and drop dropzoneImages here, or click to select dropzoneImages
           </p>
         </div>
-        {images.length > 0 && (
-          <CardContent>
-            <div className="flex flex-wrap mt-5">
-              {images.map((image, index) => (
+        {dropzoneImages.length > 0 && (
+          <CardContent className="pt-6">
+            <div className="flex flex-wrap">
+              {dropzoneImages.map((image, index) => (
                 <div
                   key={index}
                   style={{ position: "relative", marginRight: "10px" }}
@@ -80,12 +83,12 @@ const useImageDropzone = (multiple: boolean): ImageDropzoneHook => {
                     style={{
                       maxWidth: "100px",
                       maxHeight: "100px",
-                      margin: "5px",
                       border: "1px solid #ccc",
                     }}
                   />
                   <button
                     onClick={() => removeImage(index)}
+                    type="button"
                     style={{
                       position: "absolute",
                       top: "5px",
@@ -104,11 +107,16 @@ const useImageDropzone = (multiple: boolean): ImageDropzoneHook => {
             </div>
           </CardContent>
         )}
+        <CardFooter>
+          <span className="text-sm text-muted-foreground">
+            Supported images: JPG/PNG. Max Size: 1MB.
+          </span>
+        </CardFooter>
       </Card>
     </div>
   );
 
-  return { DropzoneComponent, images };
+  return { DropzoneComponent, dropzoneImages, setDropzoneImages };
 };
 
 export default useImageDropzone;

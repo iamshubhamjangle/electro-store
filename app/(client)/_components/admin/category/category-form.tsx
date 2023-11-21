@@ -21,8 +21,6 @@ import {
 } from "@/component/form";
 import { Button } from "@/component/button";
 import { Input } from "@/component/input";
-import { Progress } from "@/component/progress";
-import { SingleImageDropzone } from "@/component/single-image-dropzone";
 import SingleImageDropzoneWrapper from "@/component//single-image-dropzone-wrapper";
 
 const CategoryFormSchema = z.object({

@@ -19,8 +19,9 @@ import {
 } from "@/component/form";
 import { Button } from "@/component/button";
 import { Input } from "@/component/input";
-import SingleImageDropzoneWrapper from "@/component//single-image-dropzone-wrapper";
 import { ProductFormSchema, ProductFormType } from "@/types/form-schemas";
+import useImageDropzone from "../../ui/image-dropzone";
+import { formatBytes } from "@/app/_lib/utils";
 
 interface ProductFormProps {
   action: "ADD" | "UPDATE";
@@ -37,8 +38,9 @@ const ProductForm: React.FC<ProductFormProps> = ({
   const { edgestore } = useEdgeStore();
 
   const [loading, setLoading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [localProductImages, setLocalProductImages] = useState<File[]>();
+  const [uploadedImagesUrl, setUploadedImagesUrl] = useState<String[]>([]);
+  const { DropzoneComponent, dropzoneImages, setDropzoneImages } =
+    useImageDropzone(true);
 
   const form = useForm<ProductFormType>({
     resolver: zodResolver(ProductFormSchema),
@@ -69,12 +71,40 @@ const ProductForm: React.FC<ProductFormProps> = ({
   });
 
   async function onSubmit(values: ProductFormType) {
+    setLoading(true);
+    setUploadedImagesUrl([]);
+
+    dropzoneImages.map(async (file) => {
+      try {
+        const res = await edgestore.publicImages.upload({
+          file,
+          input: {
+            category: "product",
+          },
+        });
+        setUploadedImagesUrl((prevState) => [...prevState, res.url]);
+      } catch (error) {
+        console.log(
+          `IMAGE UPLOAD FAILED FOR '${file.name}', SIZE: ${formatBytes(
+            file.size
+          )}`
+        );
+        toast.error(
+          `Image upload failed for '${file.name}', size: ${formatBytes(
+            file.size
+          )}`,
+          {
+            duration: 5000,
+          }
+        );
+      }
+    });
+
     const {
       id,
       title,
       subTitle,
       description,
-      imageUrls,
       categoryId,
       sellingPrice,
       maximumRetailPrice,
@@ -82,16 +112,13 @@ const ProductForm: React.FC<ProductFormProps> = ({
       rating,
     } = values;
 
-    setLoading(true);
-    setUploadProgress(0);
-
     await axios
       .post("/api/admin/product", {
         id,
         title,
         subTitle,
         description,
-        imageUrls,
+        imageUrls: uploadedImagesUrl,
         categoryId,
         sellingPrice,
         maximumRetailPrice,
@@ -105,19 +132,14 @@ const ProductForm: React.FC<ProductFormProps> = ({
       })
       .catch((err) => toast.error(`Unable to add new product: ${err?.message}`))
       .finally(() => setLoading(false));
+
+    setDropzoneImages([]);
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {/* 
-          <SingleImageDropzoneWrapper
-            localImage={localProductImage}
-            localImageSetter={setLocalProductImage}
-            backupImage={product.imageUrl}
-            uploadProgress={uploadProgress}
-          />
-        */}
+        {DropzoneComponent}
         <FormField
           control={form.control}
           name="title"
