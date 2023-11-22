@@ -13,7 +13,10 @@ type ImageDropzoneHook = {
   setDropzoneImages: Dispatch<SetStateAction<File[]>>;
 };
 
-const useImageDropzone = (multiple: boolean): ImageDropzoneHook => {
+const useImageDropzone = (
+  multiple: boolean,
+  label: string = "Images"
+): ImageDropzoneHook => {
   const [dropzoneImages, setDropzoneImages] = useState<File[]>([]);
 
   const onDrop = useCallback(
@@ -55,7 +58,7 @@ const useImageDropzone = (multiple: boolean): ImageDropzoneHook => {
 
   const DropzoneComponent = (
     <div>
-      <h6 className="my-2 text-sm font-medium">Images</h6>
+      <h6 className="my-2 text-sm font-medium">{label}</h6>
       <Card>
         <div
           {...getRootProps({

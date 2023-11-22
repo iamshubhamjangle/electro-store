@@ -21,7 +21,8 @@ import {
 } from "@/component/form";
 import { Button } from "@/component/button";
 import { Input } from "@/component/input";
-import SingleImageDropzoneWrapper from "@/component//single-image-dropzone-wrapper";
+import useImageDropzone from "../../ui/image-dropzone";
+import { formatBytes } from "@/app/_lib/utils";
 
 const CategoryFormSchema = z.object({
   id: z.string().optional(),
@@ -46,11 +47,15 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
   const { edgestore } = useEdgeStore();
 
   const [loading, setLoading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [localCategoryImage, setLocalCategoryImage] = useState<File>();
-  const [localCategoryBannerImage, setLocalCategoryBannerImage] =
-    useState<File>();
-  const [uploadProgressBannerImage, setUploadProgressBannerImage] = useState(0);
+
+  const { DropzoneComponent, dropzoneImages, setDropzoneImages } =
+    useImageDropzone(false, "Image");
+
+  const {
+    DropzoneComponent: BannerDropzoneComponent,
+    dropzoneImages: bannerDropzoneImage,
+    setDropzoneImages: setBannerDropzoneImage,
+  } = useImageDropzone(false, "Banner Image");
 
   const form = useForm<formSchema>({
     resolver: zodResolver(CategoryFormSchema),
@@ -67,101 +72,101 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
   });
 
   async function onSubmit(values: formSchema) {
-    const { id, name, redirectUrl } = values;
     let imageUrl = "";
     let bannerImageUrl = "";
 
-    if (!localCategoryImage && !category.imageUrl) {
+    if (!dropzoneImages.length && !category.imageUrl) {
       toast.error("Image is required.");
       return;
     }
 
-    if (!localCategoryBannerImage && !category.bannerImageUrl) {
+    if (!bannerDropzoneImage.length && !category.bannerImageUrl) {
       toast.error("Banner Image is required.");
       return;
     }
 
     setLoading(true);
-    setUploadProgress(0);
-    setUploadProgressBannerImage(0);
 
-    if (localCategoryImage) {
-      await edgestore.publicImages
-        .upload({
-          file: localCategoryImage,
+    for (const file of dropzoneImages) {
+      try {
+        const res = await edgestore.publicImages.upload({
+          file,
           input: {
-            category: "category",
+            category: "category/image",
           },
-          onProgressChange: (progress) => {
-            setUploadProgress(progress);
-          },
-        })
-        .then((res) => {
-          console.log("Image uploaded", res);
-          imageUrl = res.url;
-        })
-        .catch((err) => {
-          console.error("Image upload failed:", err.message);
-          toast.error(`Image upload failed`);
         });
+        imageUrl = res.url;
+      } catch (error) {
+        console.log(
+          `IMAGE UPLOAD FAILED FOR '${file.name}', SIZE: ${formatBytes(
+            file.size
+          )}`
+        );
+        toast.error(
+          `Image upload failed for '${file.name}', size: ${formatBytes(
+            file.size
+          )}`,
+          {
+            duration: 5000,
+          }
+        );
+      }
     }
 
-    if (localCategoryBannerImage) {
-      await edgestore.publicImages
-        .upload({
-          file: localCategoryBannerImage,
+    for (const file of bannerDropzoneImage) {
+      try {
+        const res = await edgestore.publicImages.upload({
+          file,
           input: {
-            category: "category",
+            category: "category/banner",
           },
-          onProgressChange: (progress) => {
-            setUploadProgressBannerImage(progress);
-          },
-        })
-        .then((res) => {
-          console.log("Image uploaded", res);
-          bannerImageUrl = res.url;
-        })
-        .catch((err) => {
-          console.error("Image upload failed:", err.message);
-          toast.error(`Image upload failed`);
         });
+        bannerImageUrl = res.url;
+      } catch (error) {
+        console.log(
+          `IMAGE UPLOAD FAILED FOR '${file.name}', SIZE: ${formatBytes(
+            file.size
+          )}`
+        );
+        toast.error(
+          `Image upload failed for '${file.name}', size: ${formatBytes(
+            file.size
+          )}`,
+          {
+            duration: 5000,
+          }
+        );
+      }
     }
 
-    await axios
-      .post("/api/admin/category", {
+    const { id, name, redirectUrl } = values;
+
+    try {
+      await axios.post("/api/admin/category", {
         id,
         name,
         imageUrl,
         bannerImageUrl,
         redirectUrl,
-      })
-      .then(() => {
-        toast.success("Added");
-        router.refresh();
-        resetCategory();
-      })
-      .catch((err) =>
-        toast.error(`Unable to add new category: ${err?.message}`)
-      )
-      .finally(() => setLoading(false));
+      });
+      toast.success("Added");
+      router.refresh();
+      resetCategory();
+    } catch (err: any) {
+      toast.error(`Unable to add new category: ${err?.message}`);
+    } finally {
+      setLoading(false);
+    }
+
+    setDropzoneImages([]);
+    setBannerDropzoneImage([]);
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <SingleImageDropzoneWrapper
-          localImage={localCategoryImage}
-          localImageSetter={setLocalCategoryImage}
-          backupImage={category.imageUrl}
-          uploadProgress={uploadProgress}
-        />
-        <SingleImageDropzoneWrapper
-          label="Banner Image"
-          localImage={localCategoryBannerImage}
-          localImageSetter={setLocalCategoryBannerImage}
-          backupImage={category.bannerImageUrl}
-          uploadProgress={uploadProgressBannerImage}
-        />
+        {DropzoneComponent}
+        {BannerDropzoneComponent}
         <FormField
           control={form.control}
           name="name"

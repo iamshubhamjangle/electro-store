@@ -38,7 +38,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
   const { edgestore } = useEdgeStore();
 
   const [loading, setLoading] = useState(false);
-  const [uploadedImagesUrl, setUploadedImagesUrl] = useState<String[]>([]);
   const { DropzoneComponent, dropzoneImages, setDropzoneImages } =
     useImageDropzone(true);
 
@@ -72,9 +71,9 @@ const ProductForm: React.FC<ProductFormProps> = ({
 
   async function onSubmit(values: ProductFormType) {
     setLoading(true);
-    setUploadedImagesUrl([]);
+    let imageUrls: String[] = [];
 
-    dropzoneImages.map(async (file) => {
+    for (const file of dropzoneImages) {
       try {
         const res = await edgestore.publicImages.upload({
           file,
@@ -82,7 +81,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
             category: "product",
           },
         });
-        setUploadedImagesUrl((prevState) => [...prevState, res.url]);
+        imageUrls.push(res.url);
       } catch (error) {
         console.log(
           `IMAGE UPLOAD FAILED FOR '${file.name}', SIZE: ${formatBytes(
@@ -98,7 +97,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
           }
         );
       }
-    });
+    }
 
     const {
       id,
@@ -112,26 +111,27 @@ const ProductForm: React.FC<ProductFormProps> = ({
       rating,
     } = values;
 
-    await axios
-      .post("/api/admin/product", {
+    try {
+      await axios.post("/api/admin/product", {
         id,
         title,
         subTitle,
         description,
-        imageUrls: uploadedImagesUrl,
+        imageUrls,
         categoryId,
         sellingPrice,
         maximumRetailPrice,
         manufacturer,
         rating,
-      })
-      .then(() => {
-        toast.success("Added");
-        router.refresh();
-        resetProduct();
-      })
-      .catch((err) => toast.error(`Unable to add new product: ${err?.message}`))
-      .finally(() => setLoading(false));
+      });
+      toast.success("Added");
+      router.refresh();
+      resetProduct();
+    } catch (err: any) {
+      toast.error(`Unable to add new product: ${err?.message}`);
+    } finally {
+      setLoading(false);
+    }
 
     setDropzoneImages([]);
   }
