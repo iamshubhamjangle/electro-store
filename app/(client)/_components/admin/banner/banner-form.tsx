@@ -20,7 +20,8 @@ import { Banner } from "@prisma/client";
 import { useEdgeStore } from "@/app/_lib/edgestore";
 import { Button } from "@/component/button";
 import { Input } from "@/component/input";
-import SingleImageDropzoneWrapper from "@/component/single-image-dropzone-wrapper";
+import useImageDropzone from "../../ui/image-dropzone";
+import { formatBytes } from "@/app/_lib/utils";
 
 const BannerFormSchema = z.object({
   id: z.string().optional(),
@@ -45,8 +46,9 @@ const BannerForm: React.FC<BannerFormProps> = ({
   const { edgestore } = useEdgeStore();
 
   const [loading, setLoading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [localBannerImage, setLocalBannerImage] = useState<File>();
+
+  const { DropzoneComponent, dropzoneImages, setDropzoneImages } =
+    useImageDropzone(false, "Image");
 
   const form = useForm<formSchema>({
     resolver: zodResolver(BannerFormSchema),
@@ -63,63 +65,66 @@ const BannerForm: React.FC<BannerFormProps> = ({
   });
 
   async function onSubmit(values: formSchema) {
-    const { id, redirectUrl, type } = values;
     let imageUrl = "";
 
-    if (!localBannerImage && !banner.imageUrl) {
+    if (!dropzoneImages.length && !banner.imageUrl) {
       toast.error("Image is required.");
       return;
     }
 
     setLoading(true);
-    setUploadProgress(0);
 
-    if (localBannerImage) {
-      await edgestore.publicImages
-        .upload({
-          file: localBannerImage,
+    for (const file of dropzoneImages) {
+      try {
+        const res = await edgestore.publicImages.upload({
+          file,
           input: {
             category: "banner",
           },
-          onProgressChange: (progress) => {
-            setUploadProgress(progress);
-          },
-        })
-        .then((res) => {
-          console.log("Image uplaoded", res);
-          imageUrl = res.url;
-        })
-        .catch((err) => {
-          console.error("Image upload failed:", err.message);
-          toast.error(`Image upload failed`);
         });
+        imageUrl = res.url;
+      } catch (error) {
+        console.log(
+          `IMAGE UPLOAD FAILED FOR '${file.name}', SIZE: ${formatBytes(
+            file.size
+          )}`
+        );
+        toast.error(
+          `Image upload failed for '${file.name}', size: ${formatBytes(
+            file.size
+          )}`,
+          {
+            duration: 5000,
+          }
+        );
+      }
     }
 
-    await axios
-      .post("/api/admin/banner", {
+    const { id, redirectUrl, type } = values;
+
+    try {
+      await axios.post("/api/admin/banner", {
         id,
         type,
         imageUrl,
         redirectUrl,
-      })
-      .then(() => {
-        toast.success("Added");
-        router.refresh();
-        resetBanner();
-      })
-      .catch((err) => toast.error(`Unable to add new banner: ${err?.message}`))
-      .finally(() => setLoading(false));
+      });
+      toast.success("Added");
+      router.refresh();
+      resetBanner();
+    } catch (err: any) {
+      toast.error(`Unable to add new banner: ${err?.message}`);
+    } finally {
+      setLoading(false);
+    }
+
+    setDropzoneImages([]);
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <SingleImageDropzoneWrapper
-          localImage={localBannerImage}
-          localImageSetter={setLocalBannerImage}
-          backupImage={banner.imageUrl}
-          uploadProgress={uploadProgress}
-        />
+        {DropzoneComponent}
         <FormField
           control={form.control}
           name="type"
