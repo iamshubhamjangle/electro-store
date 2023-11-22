@@ -20,8 +20,14 @@ import { Banner } from "@prisma/client";
 import { useEdgeStore } from "@/app/_lib/edgestore";
 import { Button } from "@/component/button";
 import { Input } from "@/component/input";
-import useImageDropzone from "../../ui/image-dropzone";
-import { formatBytes } from "@/app/_lib/utils";
+import { updateFileProgress } from "@/app/_lib/utils";
+import {
+  FileState,
+  FileUploadResult,
+  MultiFileDropzone,
+} from "../../ui/multi-file-dropzone";
+import Image from "next/image";
+import { X } from "lucide-react";
 
 const BannerFormSchema = z.object({
   id: z.string().optional(),
@@ -47,8 +53,19 @@ const BannerForm: React.FC<BannerFormProps> = ({
 
   const [loading, setLoading] = useState(false);
 
-  const { DropzoneComponent, dropzoneImages, setDropzoneImages } =
-    useImageDropzone(false, "Image");
+  const initialStateUploadRes: FileUploadResult[] = banner.imageUrl
+    ? [
+        {
+          filename: "uploadedFile",
+          url: banner.imageUrl,
+        },
+      ]
+    : [];
+
+  const [fileStates, setFileStates] = useState<FileState[]>([]);
+  const [uploadRes, setUploadRes] = useState<FileUploadResult[]>(
+    initialStateUploadRes
+  );
 
   const form = useForm<formSchema>({
     resolver: zodResolver(BannerFormSchema),
@@ -65,48 +82,23 @@ const BannerForm: React.FC<BannerFormProps> = ({
   });
 
   async function onSubmit(values: formSchema) {
-    let imageUrl = "";
+    // Get Images
+    const filteredUploadImagesUrl = uploadRes.map((item) => item.url);
 
-    if (!dropzoneImages.length && !banner.imageUrl) {
+    if (!filteredUploadImagesUrl.length && !banner.imageUrl) {
       toast.error("Image is required.");
       return;
     }
 
+    // Get Form Values
     setLoading(true);
-
-    for (const file of dropzoneImages) {
-      try {
-        const res = await edgestore.publicImages.upload({
-          file,
-          input: {
-            category: "banner",
-          },
-        });
-        imageUrl = res.url;
-      } catch (error) {
-        console.log(
-          `IMAGE UPLOAD FAILED FOR '${file.name}', SIZE: ${formatBytes(
-            file.size
-          )}`
-        );
-        toast.error(
-          `Image upload failed for '${file.name}', size: ${formatBytes(
-            file.size
-          )}`,
-          {
-            duration: 5000,
-          }
-        );
-      }
-    }
-
     const { id, redirectUrl, type } = values;
 
     try {
       await axios.post("/api/admin/banner", {
         id,
         type,
-        imageUrl,
+        imageUrl: filteredUploadImagesUrl[0],
         redirectUrl,
       });
       toast.success("Added");
@@ -117,14 +109,108 @@ const BannerForm: React.FC<BannerFormProps> = ({
     } finally {
       setLoading(false);
     }
-
-    setDropzoneImages([]);
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {DropzoneComponent}
+        {uploadRes.length > 0 && (
+          <div className="flex flex-wrap justify-between gap-4">
+            {uploadRes.map((res, index) => (
+              <div key={res.url} className="relative rounded-md">
+                <Image
+                  className="border-4 border-secondary rounded-md"
+                  src={res.url}
+                  alt={res.filename}
+                  width={200}
+                  height={200}
+                />
+                <Button
+                  className="absolute t-2 r-2 cursor-pointer z-10"
+                  onClick={() => {
+                    const newUploadResult = [...uploadRes];
+                    newUploadResult.splice(index, 1);
+                    setUploadRes(newUploadResult);
+                  }}
+                  type="button"
+                  variant="destructive"
+                  size="icon"
+                  style={{
+                    position: "absolute",
+                    top: "5px",
+                    right: "5px",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: "0",
+                    zIndex: 1,
+                  }}
+                >
+                  <X size={18} />
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+        <MultiFileDropzone
+          value={fileStates}
+          disabled={uploadRes.length >= 1}
+          dropzoneOptions={{
+            accept: {
+              "image/*": [],
+            },
+            multiple: false,
+            maxFiles: 1,
+          }}
+          onChange={(files) => setFileStates(files)}
+          onFilesAdded={async (addedFiles) => {
+            setFileStates([...fileStates, ...addedFiles]);
+            await Promise.all(
+              addedFiles.map(async (addedFileState) => {
+                try {
+                  const res = await edgestore.publicFiles.upload({
+                    file: addedFileState.file,
+                    input: {
+                      category: "banner",
+                    },
+                    onProgressChange: async (
+                      progress: FileState["progress"]
+                    ) => {
+                      updateFileProgress(
+                        addedFileState.key,
+                        progress,
+                        setFileStates
+                      );
+                      if (progress === 100) {
+                        // wait 1 second to set it to complete so that the user can see the progress bar at 100%
+                        await new Promise((resolve) =>
+                          setTimeout(resolve, 1000)
+                        );
+                        updateFileProgress(
+                          addedFileState.key,
+                          "COMPLETE",
+                          setFileStates
+                        );
+                      }
+                    },
+                  });
+                  setUploadRes((uploadRes) => [
+                    ...uploadRes,
+                    {
+                      url: res.url,
+                      filename: addedFileState.file.name,
+                    },
+                  ]);
+                } catch (err) {
+                  updateFileProgress(
+                    addedFileState.key,
+                    "ERROR",
+                    setFileStates
+                  );
+                }
+              })
+            );
+          }}
+        />
         <FormField
           control={form.control}
           name="type"
