@@ -64,7 +64,8 @@ const useImageDropzone = (multiple: boolean): ImageDropzoneHook => {
         >
           <input {...getInputProps()} />
           <p className="text-sm text-muted-foreground">
-            Drag and drop dropzoneImages here, or click to select dropzoneImages
+            Drag and drop {multiple ? "images" : "image"} here, or click to
+            select dropzoneImages
           </p>
         </div>
         <div className="p-4 space-y-4">
