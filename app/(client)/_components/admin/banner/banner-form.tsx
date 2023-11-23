@@ -3,10 +3,12 @@
 import * as z from "zod";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { Banner } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   Form,
   FormControl,
@@ -16,18 +18,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/component/form";
-import { Banner } from "@prisma/client";
-import { useEdgeStore } from "@/app/_lib/edgestore";
+import { FileState, FileUploadResult } from "@/component/multi-file-dropzone";
 import { Button } from "@/component/button";
 import { Input } from "@/component/input";
-import { updateFileProgress } from "@/app/_lib/utils";
-import {
-  FileState,
-  FileUploadResult,
-  MultiFileDropzone,
-} from "../../ui/multi-file-dropzone";
-import Image from "next/image";
-import { X } from "lucide-react";
+import MultiFileDropzoneWrapper from "@/component/multi-file-dropzone-wrapper";
 
 const BannerFormSchema = z.object({
   id: z.string().optional(),
@@ -49,22 +43,18 @@ const BannerForm: React.FC<BannerFormProps> = ({
   resetBanner,
 }) => {
   const router = useRouter();
-  const { edgestore } = useEdgeStore();
 
   const [loading, setLoading] = useState(false);
 
-  const initialStateUploadRes: FileUploadResult[] = banner.imageUrl
-    ? [
-        {
-          filename: "uploadedFile",
-          url: banner.imageUrl,
-        },
-      ]
-    : [];
-
-  const [fileStates, setFileStates] = useState<FileState[]>([]);
   const [uploadRes, setUploadRes] = useState<FileUploadResult[]>(
-    initialStateUploadRes
+    banner.imageUrl
+      ? [
+          {
+            filename: "uploadedFile",
+            url: banner.imageUrl,
+          },
+        ]
+      : []
   );
 
   const form = useForm<formSchema>({
@@ -114,102 +104,12 @@ const BannerForm: React.FC<BannerFormProps> = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {uploadRes.length > 0 && (
-          <div className="flex flex-wrap justify-between gap-4">
-            {uploadRes.map((res, index) => (
-              <div key={res.url} className="relative rounded-md">
-                <Image
-                  className="border-4 border-secondary rounded-md"
-                  src={res.url}
-                  alt={res.filename}
-                  width={200}
-                  height={200}
-                />
-                <Button
-                  className="absolute t-2 r-2 cursor-pointer z-10"
-                  onClick={() => {
-                    const newUploadResult = [...uploadRes];
-                    newUploadResult.splice(index, 1);
-                    setUploadRes(newUploadResult);
-                  }}
-                  type="button"
-                  variant="destructive"
-                  size="icon"
-                  style={{
-                    position: "absolute",
-                    top: "5px",
-                    right: "5px",
-                    border: "none",
-                    cursor: "pointer",
-                    padding: "0",
-                    zIndex: 1,
-                  }}
-                >
-                  <X size={18} />
-                </Button>
-              </div>
-            ))}
-          </div>
-        )}
-        <MultiFileDropzone
-          value={fileStates}
-          disabled={uploadRes.length >= 1}
-          dropzoneOptions={{
-            accept: {
-              "image/*": [],
-            },
-            multiple: false,
-            maxFiles: 1,
-          }}
-          onChange={(files) => setFileStates(files)}
-          onFilesAdded={async (addedFiles) => {
-            setFileStates([...fileStates, ...addedFiles]);
-            await Promise.all(
-              addedFiles.map(async (addedFileState) => {
-                try {
-                  const res = await edgestore.publicFiles.upload({
-                    file: addedFileState.file,
-                    input: {
-                      category: "banner",
-                    },
-                    onProgressChange: async (
-                      progress: FileState["progress"]
-                    ) => {
-                      updateFileProgress(
-                        addedFileState.key,
-                        progress,
-                        setFileStates
-                      );
-                      if (progress === 100) {
-                        // wait 1 second to set it to complete so that the user can see the progress bar at 100%
-                        await new Promise((resolve) =>
-                          setTimeout(resolve, 1000)
-                        );
-                        updateFileProgress(
-                          addedFileState.key,
-                          "COMPLETE",
-                          setFileStates
-                        );
-                      }
-                    },
-                  });
-                  setUploadRes((uploadRes) => [
-                    ...uploadRes,
-                    {
-                      url: res.url,
-                      filename: addedFileState.file.name,
-                    },
-                  ]);
-                } catch (err) {
-                  updateFileProgress(
-                    addedFileState.key,
-                    "ERROR",
-                    setFileStates
-                  );
-                }
-              })
-            );
-          }}
+        <MultiFileDropzoneWrapper
+          uploadRes={uploadRes}
+          setUploadRes={setUploadRes}
+          allowMultiFileSelect={false}
+          maximumAllowedFiles={1}
+          uploadFileCategory="banner"
         />
         <FormField
           control={form.control}
