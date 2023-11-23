@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import toast from "react-hot-toast";
+import Image from "next/image";
 import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
@@ -12,6 +13,23 @@ import { useProductStore } from "@/app/(client)/_store/product";
 import { ProductFormType } from "@/app/_types/form-schemas";
 
 const productColumn: ColumnDef<ProductFormType>[] = [
+  {
+    accessorKey: "imageUrl",
+    header: () => <div className="font-bold">Image</div>,
+    cell: ({ row }) => (
+      <div className="flex flex-wrap gap-1">
+        {row.original.imageUrls.map((src, index) => (
+          <Image
+            key={index}
+            src={src || "/dummy.png"}
+            alt="Image"
+            width={50}
+            height={50}
+          />
+        ))}
+      </div>
+    ),
+  },
   {
     accessorKey: "title",
     header: () => <div className="font-bold">Title</div>,
@@ -31,10 +49,12 @@ const productColumn: ColumnDef<ProductFormType>[] = [
   {
     accessorKey: "sellingPrice",
     header: () => <div className="font-bold">Price</div>,
+    cell: ({ row }) => <span>₹{row.original.sellingPrice}</span>,
   },
   {
     accessorKey: "maximumRetailPrice",
     header: () => <div className="font-bold">MRP</div>,
+    cell: ({ row }) => <span>₹{row.original.maximumRetailPrice}</span>,
   },
   {
     id: "actions",
