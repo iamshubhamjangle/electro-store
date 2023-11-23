@@ -1,6 +1,5 @@
 "use client";
 
-import * as z from "zod";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
@@ -18,18 +17,11 @@ import {
 } from "@/component/form";
 import { Button } from "@/component/button";
 import { Input } from "@/component/input";
-import { Trait } from "@prisma/client";
-
-const traitFormSchema = z.object({
-  id: z.string().optional(),
-  name: z.string().min(1).max(50).toUpperCase(),
-});
-
-type formSchema = z.infer<typeof traitFormSchema>;
+import { TraitFormSchema, TraitFormType } from "@/app/_types/form-schemas";
 
 interface TraitFormProps {
   action: "ADD" | "UPDATE";
-  trait: Trait;
+  trait: TraitFormType;
   resetTrait: () => void;
 }
 
@@ -37,8 +29,8 @@ const TraitForm: React.FC<TraitFormProps> = ({ action, trait, resetTrait }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const form = useForm<formSchema>({
-    resolver: zodResolver(traitFormSchema),
+  const form = useForm<TraitFormType>({
+    resolver: zodResolver(TraitFormSchema),
     defaultValues: {
       id: "",
       name: "",
@@ -49,7 +41,7 @@ const TraitForm: React.FC<TraitFormProps> = ({ action, trait, resetTrait }) => {
     },
   });
 
-  async function onSubmit(values: formSchema) {
+  async function onSubmit(values: TraitFormType) {
     const { id, name } = values;
 
     setLoading(true);

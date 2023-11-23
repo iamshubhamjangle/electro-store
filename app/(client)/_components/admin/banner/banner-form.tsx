@@ -1,13 +1,13 @@
 "use client";
 
-import * as z from "zod";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Banner } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { BannerFormSchema, BannerFormType } from "@/app/_types/form-schemas";
 
 import {
   Form,
@@ -23,17 +23,9 @@ import { Button } from "@/component/button";
 import { FileUploadResult } from "@/component/multi-file-dropzone";
 import MultiFileDropzoneWrapper from "@/component/multi-file-dropzone-wrapper";
 
-const BannerFormSchema = z.object({
-  id: z.string().optional(),
-  redirectUrl: z.string().min(1),
-  type: z.string().min(1).max(50).toUpperCase(),
-});
-
-type formSchema = z.infer<typeof BannerFormSchema>;
-
 interface BannerFormProps {
   action: "ADD" | "UPDATE";
-  banner: Banner;
+  banner: BannerFormType;
   resetBanner: () => void;
 }
 
@@ -46,34 +38,30 @@ const BannerForm: React.FC<BannerFormProps> = ({
 
   const [loading, setLoading] = useState(false);
 
-  const [uploadRes, setUploadRes] = useState<FileUploadResult[]>(
-    banner.imageUrl
-      ? [
-          {
-            filename: "uploadedFile",
-            url: banner.imageUrl,
-          },
-        ]
-      : []
-  );
+  // prettier-ignore
+  const [uploadedBannerImage, setUploadedBannerImage] = useState<FileUploadResult[]>(banner.imageUrl
+    ? [{ filename: "uploadedFile", url: banner.imageUrl }]
+    : []);
 
-  const form = useForm<formSchema>({
+  const form = useForm<BannerFormType>({
     resolver: zodResolver(BannerFormSchema),
     defaultValues: {
       id: "",
       type: "",
       redirectUrl: "",
+      imageUrl: "",
     },
     values: {
       id: banner.id,
       type: banner.type,
       redirectUrl: banner.redirectUrl,
+      imageUrl: "",
     },
   });
 
-  async function onSubmit(values: formSchema) {
+  async function onSubmit(values: BannerFormType) {
     // Get Images
-    const filteredUploadImagesUrl = uploadRes.map((item) => item.url);
+    const filteredUploadImagesUrl = uploadedBannerImage.map((item) => item.url);
 
     if (!filteredUploadImagesUrl.length && !banner.imageUrl) {
       toast.error("Image is required.");
@@ -105,8 +93,8 @@ const BannerForm: React.FC<BannerFormProps> = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <MultiFileDropzoneWrapper
-          uploadRes={uploadRes}
-          setUploadRes={setUploadRes}
+          uploadRes={uploadedBannerImage}
+          setUploadRes={setUploadedBannerImage}
           allowMultiFileSelect={false}
           maximumAllowedFiles={1}
           uploadFileCategory="banner/image"

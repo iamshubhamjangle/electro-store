@@ -1,13 +1,16 @@
 "use client";
 
-import * as z from "zod";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { Category } from "@prisma/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import {
+  CategoryFormType,
+  CategoryFormSchema,
+} from "@/app/_types/form-schemas";
 
 import {
   Form,
@@ -21,19 +24,11 @@ import {
 import { Button } from "@/component/button";
 import { Input } from "@/component/input";
 import MultiFileDropzoneWrapper from "@/component/multi-file-dropzone-wrapper";
-import { FileUploadResult } from "../../ui/multi-file-dropzone";
-
-const CategoryFormSchema = z.object({
-  id: z.string().optional(),
-  name: z.string().min(1).max(50),
-  redirectUrl: z.string().min(1),
-});
-
-type formSchema = z.infer<typeof CategoryFormSchema>;
+import { FileUploadResult } from "@/component/multi-file-dropzone";
 
 interface CategoryFormProps {
   action: "ADD" | "UPDATE";
-  category: Category;
+  category: CategoryFormType;
   resetCategory: () => void;
 }
 
@@ -60,21 +55,25 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
       ? [{ filename: "uploadedFile", url: category.bannerImageUrl }]
       : []);
 
-  const form = useForm<formSchema>({
+  const form = useForm<CategoryFormType>({
     resolver: zodResolver(CategoryFormSchema),
     defaultValues: {
       id: "",
       name: "",
       redirectUrl: "",
+      imageUrl: "",
+      bannerImageUrl: "",
     },
     values: {
       id: category.id,
       name: category.name,
       redirectUrl: category.redirectUrl,
+      imageUrl: "",
+      bannerImageUrl: "",
     },
   });
 
-  async function onSubmit(values: formSchema) {
+  async function onSubmit(values: CategoryFormType) {
     const filteredCategoryImage = uploadedCategoryImages.map(
       (item) => item.url
     );
