@@ -9,7 +9,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useEdgeStore } from "@/app/_lib/edgestore";
 import {
   Form,
   FormControl,
@@ -21,8 +20,8 @@ import {
 } from "@/component/form";
 import { Button } from "@/component/button";
 import { Input } from "@/component/input";
-import useImageDropzone from "../../ui/image-dropzone";
-import { formatBytes } from "@/app/_lib/utils";
+import MultiFileDropzoneWrapper from "@/component/multi-file-dropzone-wrapper";
+import { FileUploadResult } from "../../ui/multi-file-dropzone";
 
 const CategoryFormSchema = z.object({
   id: z.string().optional(),
@@ -44,18 +43,22 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
   resetCategory,
 }) => {
   const router = useRouter();
-  const { edgestore } = useEdgeStore();
 
   const [loading, setLoading] = useState(false);
 
-  const { DropzoneComponent, dropzoneImages, setDropzoneImages } =
-    useImageDropzone(false, "Image");
-
-  const {
-    DropzoneComponent: BannerDropzoneComponent,
-    dropzoneImages: bannerDropzoneImage,
-    setDropzoneImages: setBannerDropzoneImage,
-  } = useImageDropzone(false, "Banner Image");
+  // category/image
+  // prettier-ignore
+  const [uploadedCategoryImages, setUploadedCategoryImages] = useState<FileUploadResult[]>(
+    category.imageUrl
+      ? [{ filename: "uploadedFile", url: category.imageUrl }]
+      : []
+  );
+  // category/banner
+  // prettier-ignore
+  const [uploadedCategoryBannerImages, setUploadedCategoryBannerImages] = useState<FileUploadResult[]>(
+    category.bannerImageUrl
+      ? [{ filename: "uploadedFile", url: category.bannerImageUrl }]
+      : []);
 
   const form = useForm<formSchema>({
     resolver: zodResolver(CategoryFormSchema),
@@ -72,71 +75,20 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
   });
 
   async function onSubmit(values: formSchema) {
-    let imageUrl = "";
-    let bannerImageUrl = "";
+    const filteredCategoryImage = uploadedCategoryImages.map(
+      (item) => item.url
+    );
+    const filteredCategoryBannerImage = uploadedCategoryBannerImages.map(
+      (item) => item.url
+    );
 
-    if (!dropzoneImages.length && !category.imageUrl) {
-      toast.error("Image is required.");
+    if (!filteredCategoryImage.length && !category.imageUrl) {
+      toast.error("Category Image is required.");
       return;
     }
-
-    if (!bannerDropzoneImage.length && !category.bannerImageUrl) {
-      toast.error("Banner Image is required.");
+    if (!filteredCategoryBannerImage.length && !category.bannerImageUrl) {
+      toast.error("Category Banner Image is required.");
       return;
-    }
-
-    setLoading(true);
-
-    for (const file of dropzoneImages) {
-      try {
-        const res = await edgestore.publicImages.upload({
-          file,
-          input: {
-            category: "category/image",
-          },
-        });
-        imageUrl = res.url;
-      } catch (error) {
-        console.log(
-          `IMAGE UPLOAD FAILED FOR '${file.name}', SIZE: ${formatBytes(
-            file.size
-          )}`
-        );
-        toast.error(
-          `Image upload failed for '${file.name}', size: ${formatBytes(
-            file.size
-          )}`,
-          {
-            duration: 5000,
-          }
-        );
-      }
-    }
-
-    for (const file of bannerDropzoneImage) {
-      try {
-        const res = await edgestore.publicImages.upload({
-          file,
-          input: {
-            category: "category/banner",
-          },
-        });
-        bannerImageUrl = res.url;
-      } catch (error) {
-        console.log(
-          `IMAGE UPLOAD FAILED FOR '${file.name}', SIZE: ${formatBytes(
-            file.size
-          )}`
-        );
-        toast.error(
-          `Image upload failed for '${file.name}', size: ${formatBytes(
-            file.size
-          )}`,
-          {
-            duration: 5000,
-          }
-        );
-      }
     }
 
     const { id, name, redirectUrl } = values;
@@ -145,8 +97,8 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
       await axios.post("/api/admin/category", {
         id,
         name,
-        imageUrl,
-        bannerImageUrl,
+        imageUrl: filteredCategoryImage[0],
+        bannerImageUrl: filteredCategoryBannerImage[0],
         redirectUrl,
       });
       toast.success("Added");
@@ -157,16 +109,25 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
     } finally {
       setLoading(false);
     }
-
-    setDropzoneImages([]);
-    setBannerDropzoneImage([]);
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {DropzoneComponent}
-        {BannerDropzoneComponent}
+        <MultiFileDropzoneWrapper
+          uploadRes={uploadedCategoryImages}
+          setUploadRes={setUploadedCategoryImages}
+          allowMultiFileSelect={false}
+          maximumAllowedFiles={1}
+          uploadFileCategory="category/image"
+        />
+        <MultiFileDropzoneWrapper
+          uploadRes={uploadedCategoryBannerImages}
+          setUploadRes={setUploadedCategoryBannerImages}
+          allowMultiFileSelect={false}
+          maximumAllowedFiles={1}
+          uploadFileCategory="category/banner"
+        />
         <FormField
           control={form.control}
           name="name"

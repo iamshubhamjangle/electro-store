@@ -152,7 +152,10 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                   drag & drop or click to upload
                 </div>
                 <div className={disabled ? "text-red-500" : "text-gray-400 "}>
-                  maximum files allowed ({dropzoneOptions?.maxFiles})
+                  supported jpeg/png with max file size 1MB
+                </div>
+                <div className={disabled ? "text-red-500" : "text-gray-400 "}>
+                  maximum files allowed: {dropzoneOptions?.maxFiles}
                 </div>
               </div>
             </div>

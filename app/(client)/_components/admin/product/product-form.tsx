@@ -7,7 +7,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useEdgeStore } from "@/app/_lib/edgestore";
+import { ProductFormSchema, ProductFormType } from "@/types/form-schemas";
+
 import {
   Form,
   FormControl,
@@ -19,9 +20,8 @@ import {
 } from "@/component/form";
 import { Button } from "@/component/button";
 import { Input } from "@/component/input";
-import { ProductFormSchema, ProductFormType } from "@/types/form-schemas";
-import useImageDropzone from "../../ui/image-dropzone";
-import { formatBytes } from "@/app/_lib/utils";
+import { FileUploadResult } from "@/component/multi-file-dropzone";
+import MultiFileDropzoneWrapper from "@/component/multi-file-dropzone-wrapper";
 
 interface ProductFormProps {
   action: "ADD" | "UPDATE";
@@ -35,11 +35,14 @@ const ProductForm: React.FC<ProductFormProps> = ({
   resetProduct,
 }) => {
   const router = useRouter();
-  const { edgestore } = useEdgeStore();
 
   const [loading, setLoading] = useState(false);
-  const { DropzoneComponent, dropzoneImages, setDropzoneImages } =
-    useImageDropzone(true);
+
+  // Multi Image `product.imageUrls`
+  // prettier-ignore
+  const [uploadedProductImages, setUploadedProductImages] = useState<FileUploadResult[]>(product.imageUrls
+    ? product.imageUrls.map((imageUrl, idx) => ({ filename: `uploadedFile-${idx}`, url: imageUrl }))
+    : []);
 
   const form = useForm<ProductFormType>({
     resolver: zodResolver(ProductFormSchema),
@@ -70,34 +73,17 @@ const ProductForm: React.FC<ProductFormProps> = ({
   });
 
   async function onSubmit(values: ProductFormType) {
-    setLoading(true);
-    let imageUrls: String[] = [];
+    // Get Images Urls List
+    const filteredUploadImagesUrls = uploadedProductImages.map(
+      (item) => item.url
+    );
 
-    for (const file of dropzoneImages) {
-      try {
-        const res = await edgestore.publicImages.upload({
-          file,
-          input: {
-            category: "product",
-          },
-        });
-        imageUrls.push(res.url);
-      } catch (error) {
-        console.log(
-          `IMAGE UPLOAD FAILED FOR '${file.name}', SIZE: ${formatBytes(
-            file.size
-          )}`
-        );
-        toast.error(
-          `Image upload failed for '${file.name}', size: ${formatBytes(
-            file.size
-          )}`,
-          {
-            duration: 5000,
-          }
-        );
-      }
+    if (!filteredUploadImagesUrls.length && !product.imageUrls) {
+      toast.error("Image is required.");
+      return;
     }
+
+    setLoading(true);
 
     const {
       id,
@@ -117,7 +103,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
         title,
         subTitle,
         description,
-        imageUrls,
+        imageUrls: filteredUploadImagesUrls,
         categoryId,
         sellingPrice,
         maximumRetailPrice,
@@ -132,14 +118,18 @@ const ProductForm: React.FC<ProductFormProps> = ({
     } finally {
       setLoading(false);
     }
-
-    setDropzoneImages([]);
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {DropzoneComponent}
+        <MultiFileDropzoneWrapper
+          uploadRes={uploadedProductImages}
+          setUploadRes={setUploadedProductImages}
+          allowMultiFileSelect={true}
+          maximumAllowedFiles={5}
+          uploadFileCategory="banner"
+        />
         <FormField
           control={form.control}
           name="title"

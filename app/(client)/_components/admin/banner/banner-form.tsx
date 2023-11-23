@@ -18,9 +18,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/component/form";
-import { FileState, FileUploadResult } from "@/component/multi-file-dropzone";
-import { Button } from "@/component/button";
 import { Input } from "@/component/input";
+import { Button } from "@/component/button";
+import { FileUploadResult } from "@/component/multi-file-dropzone";
 import MultiFileDropzoneWrapper from "@/component/multi-file-dropzone-wrapper";
 
 const BannerFormSchema = z.object({
@@ -109,7 +109,7 @@ const BannerForm: React.FC<BannerFormProps> = ({
           setUploadRes={setUploadRes}
           allowMultiFileSelect={false}
           maximumAllowedFiles={1}
-          uploadFileCategory="banner"
+          uploadFileCategory="banner/image"
         />
         <FormField
           control={form.control}

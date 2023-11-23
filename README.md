@@ -109,3 +109,56 @@ GOOGLE_CLIENT_SECRET=""
 npx prisma migrate dev
 npx prisma generate
 ```
+
+## How to use <MultiFileDropzoneWrapper />
+
+This component is useful for uploading files to edgestore. The component returns uploaded files URLs. depends on <MultiFileDropzone />
+Known Issue:
+
+- If Max files is 1, and 1 file is uploaded. Then if the file is removed from thumbnail. The upload doesn't accept any more files.
+- Uploads should be temporary until form is submitted.
+
+```jsx
+import MultiFileDropzoneWrapper from "@/component/multi-file-dropzone-wrapper";
+
+// Single Image `category.imageUrl`
+// prettier-ignore
+const [uploadedCategoryImages, setUploadedCategoryImages] = useState<FileUploadResult[]>(category.imageUrl
+  ? [{ filename: "uploadedFile", url: category.imageUrl }]
+  : []);
+
+// Multi Image `product.imageUrls`
+// prettier-ignore
+const [uploadedProductImages, setUploadedProductImages] = useState<FileUploadResult[]>(product.imageUrls
+  ? product.imageUrls.map((imageUrl, idx) => ({ filename: `uploadedFile-${idx}`, url: imageUrl }))
+  : []);
+
+async function onSubmit(values: formSchema) {
+  // Get Images Urls List
+  const filteredUploadImagesUrl = uploadRes.map((item) => item.url);
+
+  if (!filteredUploadImagesUrl.length && !banner.imageUrl) {
+    toast.error("Image is required.");
+    return;
+  }
+
+  try {
+    await axios.post("/api/admin/banner", {
+      //...
+      imageUrl: filteredUploadImagesUrl[0],
+      //...
+    });
+    //...
+  } catch (err: any) {
+    //...handleErrors
+  }
+}
+
+<MultiFileDropzoneWrapper
+  uploadRes={uploadRes}
+  setUploadRes={setUploadRes}
+  allowMultiFileSelect={false}
+  maximumAllowedFiles={1}
+  uploadFileCategory="banner"
+/>
+```
