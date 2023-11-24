@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Category } from "@prisma/client";
+import { Category, Trait } from "@prisma/client";
 
 import { ProductFormSchema, ProductFormType } from "@/types/form-schemas";
 
@@ -21,6 +21,7 @@ import {
 } from "@/component/form";
 import { Button } from "@/component/button";
 import { Input } from "@/component/input";
+import { Checkbox } from "@/component/checkbox";
 import {
   Select,
   SelectContent,
@@ -36,6 +37,7 @@ interface ProductFormProps {
   product: ProductFormType;
   resetProduct: () => void;
   categories: Category[];
+  traits: Trait[];
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({
@@ -43,6 +45,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
   product,
   resetProduct,
   categories,
+  traits,
 }) => {
   const router = useRouter();
 
@@ -67,6 +70,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
       maximumRetailPrice: "",
       manufacturer: "",
       rating: "",
+      traits: [],
     },
     values: {
       id: product.id,
@@ -79,10 +83,13 @@ const ProductForm: React.FC<ProductFormProps> = ({
       maximumRetailPrice: product.maximumRetailPrice.toString(),
       manufacturer: product.manufacturer,
       rating: product.rating.toString(),
+      traits: product.traits,
     },
   });
 
   async function onSubmit(values: ProductFormType) {
+    console.log("values", values);
+
     // Get Images Urls List
     const filteredUploadImagesUrls = uploadedProductImages.map(
       (item) => item.url
@@ -105,6 +112,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
       maximumRetailPrice,
       manufacturer,
       rating,
+      traits,
     } = values;
 
     try {
@@ -119,6 +127,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
         maximumRetailPrice,
         manufacturer,
         rating,
+        traits,
       });
       toast.success("Added");
       router.refresh();
@@ -262,6 +271,56 @@ const ProductForm: React.FC<ProductFormProps> = ({
               <FormControl>
                 <Input {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="traits"
+          render={() => (
+            <FormItem>
+              <div className="mb-4">
+                <FormLabel className="text-base">Traits</FormLabel>
+                <FormDescription>
+                  Select the trait you want to assign the product.
+                </FormDescription>
+              </div>
+              {traits.map((item) => (
+                <FormField
+                  key={item.id}
+                  control={form.control}
+                  name="traits"
+                  render={({ field }) => {
+                    return (
+                      <FormItem
+                        key={item.id}
+                        className="flex flex-row items-start space-x-3 space-y-0"
+                      >
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value?.some(
+                              (_trait) => _trait.id === item.id
+                            )}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? field.onChange([...field.value, item])
+                                : field.onChange(
+                                    field.value?.filter(
+                                      (value) => value.id !== item.id
+                                    )
+                                  );
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          {item.name}
+                        </FormLabel>
+                      </FormItem>
+                    );
+                  }}
+                />
+              ))}
               <FormMessage />
             </FormItem>
           )}

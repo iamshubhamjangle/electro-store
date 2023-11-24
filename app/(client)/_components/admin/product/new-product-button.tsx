@@ -11,13 +11,17 @@ import {
 import ProductForm from "./product-form";
 import { Button } from "@/component/button";
 import { useProductStore } from "@/app/(client)/_store/product";
-import { Category } from "@prisma/client";
+import { Category, Trait } from "@prisma/client";
 
 interface NewProductButtonProps {
   categories: Category[];
+  traits: Trait[];
 }
 
-const NewProductButton: React.FC<NewProductButtonProps> = ({ categories }) => {
+const NewProductButton: React.FC<NewProductButtonProps> = ({
+  categories,
+  traits,
+}) => {
   const store = useProductStore();
   const { dialogOpen, setDialogOpen } = store;
 
@@ -40,6 +44,7 @@ const NewProductButton: React.FC<NewProductButtonProps> = ({ categories }) => {
           product={store.product}
           resetProduct={store.resetProduct}
           categories={categories}
+          traits={traits}
         />
       </DialogContent>
     </Dialog>

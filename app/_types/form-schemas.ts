@@ -18,6 +18,12 @@ export const ProductFormSchema = z.object({
       name: z.string().optional(),
     })
     .optional(),
+  traits: z
+    .object({
+      id: z.string(),
+      name: z.string().min(1).max(50).toUpperCase(),
+    })
+    .array(),
 });
 
 export const CategoryFormSchema = z.object({

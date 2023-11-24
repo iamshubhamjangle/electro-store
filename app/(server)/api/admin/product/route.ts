@@ -13,6 +13,8 @@ export async function POST(req: NextRequest) {
     // const userId = session.user?.id;
 
     const body = await req.json();
+    console.log("body", body);
+
     const {
       id,
       title,
@@ -24,6 +26,7 @@ export async function POST(req: NextRequest) {
       maximumRetailPrice,
       manufacturer,
       rating,
+      traits,
     }: ProductFormType = body;
 
     if (
@@ -39,6 +42,18 @@ export async function POST(req: NextRequest) {
 
     const parsedSellingPrice = parseInt(sellingPrice) || 0;
     const parsedMaximumRetailPrice = parseInt(maximumRetailPrice) || 0;
+    const formattedTrait = traits?.map((trait) => ({ id: trait.id }));
+
+    // Find the existing product including its associated traits
+    const existingProduct = await prisma.product.findUnique({
+      where: { id },
+      include: { trait: true }, // Assuming 'trait' is the relation field name in the Product model
+    });
+
+    // Extract existing trait IDs
+    const existingTraitIds = existingProduct?.trait.map(
+      (existingTrait) => existingTrait.id
+    );
 
     await prisma.product.upsert({
       create: {
@@ -51,6 +66,9 @@ export async function POST(req: NextRequest) {
         maximumRetailPrice: parsedMaximumRetailPrice,
         manufacturer: manufacturer || undefined,
         rating,
+        trait: {
+          connect: formattedTrait,
+        },
       },
       update: {
         title,
@@ -62,6 +80,11 @@ export async function POST(req: NextRequest) {
         maximumRetailPrice: parsedMaximumRetailPrice,
         manufacturer: manufacturer || undefined,
         rating,
+        trait: {
+          // each time user sends new set of values. Hence disconnect previous
+          disconnect: existingTraitIds?.map((id) => ({ id })),
+          connect: formattedTrait,
+        },
       },
       where: {
         id,
