@@ -12,6 +12,12 @@ export const ProductFormSchema = z.object({
   maximumRetailPrice: z.string(),
   manufacturer: z.string(),
   rating: z.string(),
+  category: z
+    .object({
+      id: z.string().optional(),
+      name: z.string().optional(),
+    })
+    .optional(),
 });
 
 export const CategoryFormSchema = z.object({

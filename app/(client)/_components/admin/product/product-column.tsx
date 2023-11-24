@@ -18,7 +18,7 @@ const productColumn: ColumnDef<ProductFormType>[] = [
     header: () => <div className="font-bold">Image</div>,
     cell: ({ row }) => (
       <div className="flex flex-wrap gap-1">
-        {row.original.imageUrls.map((src, index) => (
+        {row.original.imageUrls.map((src: string, index: number) => (
           <Image
             key={index}
             src={src || "/dummy.png"}
@@ -45,6 +45,7 @@ const productColumn: ColumnDef<ProductFormType>[] = [
   {
     accessorKey: "categoryId",
     header: () => <div className="font-bold">Category</div>,
+    cell: ({ row }) => <span>{row.original.category?.name}</span>,
   },
   {
     accessorKey: "sellingPrice",

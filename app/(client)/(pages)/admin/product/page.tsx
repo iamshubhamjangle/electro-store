@@ -5,7 +5,16 @@ import { DataTable } from "@/component/data-table";
 import { ProductFormType } from "@/app/_types/form-schemas";
 
 const Page = async () => {
-  const products = await prisma.product.findMany();
+  const products = await prisma.product.findMany({
+    include: {
+      category: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
   const categories = await prisma.category.findMany();
 
   // Format Prisma Output - Convert Optional values null to string & convert other data types to string
@@ -21,6 +30,10 @@ const Page = async () => {
       sellingPrice: p.sellingPrice.toString(),
       maximumRetailPrice: p.maximumRetailPrice.toString(),
       rating: p.rating.toString(),
+      category: {
+        id: p.category?.id,
+        name: p.category?.name,
+      },
     };
   });
 
