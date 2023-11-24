@@ -6,6 +6,7 @@ import { ProductFormType } from "@/app/_types/form-schemas";
 
 const Page = async () => {
   const products = await prisma.product.findMany();
+  const categories = await prisma.category.findMany();
 
   // Format Prisma Output - Convert Optional values null to string & convert other data types to string
   const formattedProducts: ProductFormType[] = products.map((p) => {
@@ -25,7 +26,7 @@ const Page = async () => {
 
   return (
     <div className="space-y-4">
-      <NewProductButton />
+      <NewProductButton categories={categories} />
       <DataTable columns={productColumn} data={formattedProducts} />
     </div>
   );

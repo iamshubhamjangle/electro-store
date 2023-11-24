@@ -8,11 +8,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/component/dialog";
-import { Button } from "@/component/button";
 import ProductForm from "./product-form";
+import { Button } from "@/component/button";
 import { useProductStore } from "@/app/(client)/_store/product";
+import { Category } from "@prisma/client";
 
-const NewProductButton = () => {
+interface NewProductButtonProps {
+  categories: Category[];
+}
+
+const NewProductButton: React.FC<NewProductButtonProps> = ({ categories }) => {
   const store = useProductStore();
   const { dialogOpen, setDialogOpen } = store;
 
@@ -34,6 +39,7 @@ const NewProductButton = () => {
           action={store.action}
           product={store.product}
           resetProduct={store.resetProduct}
+          categories={categories}
         />
       </DialogContent>
     </Dialog>

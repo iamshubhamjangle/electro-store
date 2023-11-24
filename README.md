@@ -1,4 +1,5 @@
-- Improve Forms: Use strings only. Remove any @prisma types imported.
+- If uploaded image is removed. The upload limit is not updated.
+- Implement Admin panel access using scopes.
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 

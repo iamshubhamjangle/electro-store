@@ -88,9 +88,9 @@ const ActionRow: React.FC<any> = ({ row }) => {
   };
 
   return (
-    <>
+    <div className="flex gap-2">
       <Button
-        variant="ghost"
+        variant="default"
         className="h-8 w-8 p-0"
         loading={loading}
         onClick={() => {
@@ -103,7 +103,7 @@ const ActionRow: React.FC<any> = ({ row }) => {
         <Edit className="h-4 w-4" />
       </Button>
       <Button
-        variant="ghost"
+        variant="destructive"
         className="h-8 w-8 p-0"
         loading={loading}
         onClick={() => handleDeleteItem(row.original.id)}
@@ -111,6 +111,6 @@ const ActionRow: React.FC<any> = ({ row }) => {
         <span className="sr-only">Delete</span>
         <Trash2 className="h-4 w-4" />
       </Button>
-    </>
+    </div>
   );
 };

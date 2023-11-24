@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Category } from "@prisma/client";
 
 import { ProductFormSchema, ProductFormType } from "@/types/form-schemas";
 
@@ -20,6 +21,13 @@ import {
 } from "@/component/form";
 import { Button } from "@/component/button";
 import { Input } from "@/component/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/component/select";
 import { FileUploadResult } from "@/component/multi-file-dropzone";
 import MultiFileDropzoneWrapper from "@/component/multi-file-dropzone-wrapper";
 
@@ -27,12 +35,14 @@ interface ProductFormProps {
   action: "ADD" | "UPDATE";
   product: ProductFormType;
   resetProduct: () => void;
+  categories: Category[];
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({
   action,
   product,
   resetProduct,
+  categories,
 }) => {
   const router = useRouter();
 
@@ -181,10 +191,21 @@ const ProductForm: React.FC<ProductFormProps> = ({
           name="categoryId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>CategoryId</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
+              <FormLabel>Category</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
