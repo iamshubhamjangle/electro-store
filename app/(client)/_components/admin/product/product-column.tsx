@@ -41,6 +41,9 @@ const productColumn: ColumnDef<ProductFormType>[] = [
   {
     accessorKey: "description",
     header: () => <div className="font-bold">Description</div>,
+    cell: ({ row }) => (
+      <p className="max-w-xs wrap-lines-2">{row.original.description}</p>
+    ),
   },
   {
     accessorKey: "categoryId",

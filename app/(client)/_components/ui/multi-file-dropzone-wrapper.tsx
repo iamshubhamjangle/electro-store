@@ -16,6 +16,7 @@ import {
 import { Button } from "@/component/button";
 
 interface MultiFileDropzoneWrapperProps {
+  title?: string;
   uploadRes: FileUploadResult[];
   setUploadRes: (value: SetStateAction<FileUploadResult[]>) => void;
   uploadFileCategory: string;
@@ -25,6 +26,7 @@ interface MultiFileDropzoneWrapperProps {
 }
 
 const MultiFileDropzoneWrapper: React.FC<MultiFileDropzoneWrapperProps> = ({
+  title = "Image",
   uploadRes,
   setUploadRes,
   uploadFileCategory,
@@ -36,7 +38,8 @@ const MultiFileDropzoneWrapper: React.FC<MultiFileDropzoneWrapperProps> = ({
   const [fileStates, setFileStates] = useState<FileState[]>([]);
 
   return (
-    <>
+    <div className="space-y-1">
+      <h3 className="font-medium">{title}</h3>
       {uploadRes.length > 0 && (
         <div className="flex flex-wrap justify-between gap-4">
           {uploadRes.map((res, index) => (
@@ -127,7 +130,7 @@ const MultiFileDropzoneWrapper: React.FC<MultiFileDropzoneWrapperProps> = ({
           );
         }}
       />
-    </>
+    </div>
   );
 };
 

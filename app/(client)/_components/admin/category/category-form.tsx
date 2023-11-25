@@ -114,6 +114,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <MultiFileDropzoneWrapper
+          title="Main Image"
           uploadRes={uploadedCategoryImages}
           setUploadRes={setUploadedCategoryImages}
           allowMultiFileSelect={false}
@@ -121,6 +122,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
           uploadFileCategory="category/image"
         />
         <MultiFileDropzoneWrapper
+          title="Banner Image"
           uploadRes={uploadedCategoryBannerImages}
           setUploadRes={setUploadedCategoryBannerImages}
           allowMultiFileSelect={false}

@@ -56,6 +56,7 @@ const orderColumn: ColumnDef<Order>[] = [
   {
     accessorKey: "address",
     header: () => <div className="font-bold">Address</div>,
+    cell: ({ row }) => <p className="max-w-xs">{row.original.address}</p>,
   },
   {
     accessorKey: "status",

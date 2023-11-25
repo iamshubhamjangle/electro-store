@@ -40,8 +40,9 @@ export async function POST(req: NextRequest) {
       return new NextResponse("Missing Fields", { status: 400 });
     }
 
-    const parsedSellingPrice = parseInt(sellingPrice) || 0;
-    const parsedMaximumRetailPrice = parseInt(maximumRetailPrice) || 0;
+    const parsedSellingPrice = parseInt(sellingPrice.replace(/,/g, "")) || 0;
+    const parsedMaximumRetailPrice =
+      parseInt(maximumRetailPrice.replace(/,/g, "")) || 0;
     const formattedTrait = traits?.map((trait) => ({ id: trait.id }));
 
     // Find the existing product including its associated traits

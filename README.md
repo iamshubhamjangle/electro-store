@@ -1,5 +1,6 @@
 - If uploaded image is removed. The upload limit is not updated.
 - Implement Admin panel access using scopes.
+- Click on the image should open it in enlarge window.
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
