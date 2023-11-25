@@ -1,12 +1,14 @@
-import fetcher from "@/app/_lib/fetcher";
+import prisma from "@/app/_lib/db";
 import HeroSectionComponent from "./HeroSectionComponent";
 
 const HeroSection = async () => {
-  const data = await fetcher("/api/website-banners?populate=bannerImage").catch(
-    (e) => {}
-  );
+  const banners = await prisma.banner.findMany({
+    where: {
+      type: "CAROUSEL_BANNER",
+    },
+  });
 
-  return <HeroSectionComponent data={data} />;
+  return <HeroSectionComponent banners={banners} />;
 };
 
 export default HeroSection;

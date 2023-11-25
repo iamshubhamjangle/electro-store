@@ -18,7 +18,7 @@ const Orders = async () => {
 
   return (
     <div className="my-4">
-      {orders.map((order, idx) => {
+      {orders?.map((order, idx) => {
         return (
           <div key={idx}>
             <div className="my-4 rounded-md border hover:shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
@@ -38,7 +38,7 @@ const Orders = async () => {
                 </div>
                 <div className="mt-2 md:ml-8 p-4 bg-blue-50 space-y-2 rounded-md">
                   <p className="font-medium">Items</p>
-                  {order.products.map((product, idx) => {
+                  {order.products?.map((product, idx) => {
                     return (
                       <div key={idx} className="flex gap-2">
                         <div className="font-medium">{idx + 1}.</div>

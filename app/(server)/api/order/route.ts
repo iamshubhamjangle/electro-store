@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     //     orderTotal,
     //     products: {
     //       createMany: {
-    //         data: cartItems.map((cartItem) => {
+    //         data: cartItems?.map((cartItem) => {
     //           return {
     //             product_id: cartItem.product_id,
     //             product_title: cartItem.product_title,

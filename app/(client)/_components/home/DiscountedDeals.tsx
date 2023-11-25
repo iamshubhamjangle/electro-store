@@ -1,15 +1,17 @@
 import ContentRow from "@/app/(client)/_components/home/ContentRow";
 import ProductImageBanner from "@/component/product-image-banner";
-import fetcher from "@/app/_lib/fetcher";
+import prisma from "@/app/_lib/db";
 
 const DiscountedDeals = async () => {
-  const data = await fetcher(
-    "/api/deals?populate=*&filters[type][$eqi]=DISCOUNTED"
-  ).catch((e) => {});
+  const banners = await prisma.banner.findMany({
+    where: {
+      type: "DISCOUNTED",
+    },
+  });
 
   return (
     <ContentRow title="Discounted Deals">
-      <ProductImageBanner data={data} />
+      <ProductImageBanner banners={banners} />
     </ContentRow>
   );
 };

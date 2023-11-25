@@ -1,27 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Banner } from "@prisma/client";
 
 interface ProductImageBannerProps {
-  data: any;
+  banners: Banner[];
 }
 
-const ProductImageBanner: React.FC<ProductImageBannerProps> = ({ data }) => {
+const ProductImageBanner: React.FC<ProductImageBannerProps> = ({ banners }) => {
   return (
     <div className="grid grid-cols-3 gap-4 relative">
-      {data?.data?.map((item: any, idx: number) => {
+      {banners?.map((item) => {
         return (
-          <Link href={item?.attributes?.redirectUrl || "#"} key={idx}>
+          <Link href={item.redirectUrl} key={item.id} prefetch={false}>
             <Image
               className="rounded-md object-cover"
-              alt={
-                item?.attributes?.image?.data?.attributes?.alternativeText ||
-                "product image"
-              }
-              src={
-                item?.attributes?.image?.data?.attributes?.url
-                  ? `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}${item?.attributes?.image?.data?.attributes?.url}`
-                  : "/grey.jpg"
-              }
+              alt={item.type}
+              src={item.imageUrl}
               width={500}
               height={300}
             />

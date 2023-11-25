@@ -3,31 +3,18 @@ import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ProductItemAddToCart from "./product-item-action-add";
+import { Product } from "@prisma/client";
 
 interface ProductItemProps extends React.HTMLAttributes<HTMLDivElement> {
-  productId: number;
-  name: string;
-  description: string;
-  imgSrc: string;
-  rating: number;
-  reviews: number;
-  currentPrice: number;
-  originalPrice: number;
+  product: Product;
   width?: number;
   height?: number;
 }
 
 const ProductItem = ({
-  productId,
-  name,
-  description,
-  imgSrc,
+  product,
   width,
   height,
-  rating = 0,
-  reviews = 0,
-  currentPrice = 0,
-  originalPrice = 0,
   className,
   ...props
 }: ProductItemProps) => {
@@ -41,39 +28,37 @@ const ProductItem = ({
     >
       <div>
         <Image
-          src={
-            imgSrc
-              ? `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}${imgSrc}`
-              : "/grey.jpg"
-          }
-          alt={name}
+          src={product.imageUrls && product.imageUrls[0]}
+          alt={product.title}
           width={width}
           height={height}
           className={cn("object-cover mx-auto")}
         />
         <div className="space-y-3 text-sm">
           <div className="flex gap-2 justify-between">
-            <h3 className="font-bold leading-none">{name}</h3>
+            <h3 className="font-bold leading-none">{product.title}</h3>
           </div>
           <div className="">
             <p className="text-xs font-medium text-muted-foreground wrap-lines-2">
-              {description}
+              {product.description}
             </p>
           </div>
           <div className="flex justify-between">
             <div className="flex gap-1 items-center">
               <div className="flex items-center gap-1 bg-blue-900 w-fit p-1 rounded-sm">
-                <span className="text-xs font-bold text-white">{rating}</span>
+                <span className="text-xs font-bold text-white">
+                  {product.rating.toString()}
+                </span>
                 <Star className="w-3 h-3" stroke="white" fill="white" />
               </div>
               <span className="text-sm font-bold text-muted-foreground">
-                ({reviews})
+                (0)
               </span>
             </div>
             <div className="flex gap-1 items-center">
-              <span className="font-bold">₹{currentPrice}</span>
+              <span className="font-bold">₹{product.sellingPrice}</span>
               <span className="text-xs line-through text-muted-foreground">
-                ₹{originalPrice}
+                ₹{product.maximumRetailPrice}
               </span>
             </div>
           </div>
@@ -81,12 +66,12 @@ const ProductItem = ({
       </div>
       <div className="mt-2">
         <ProductItemAddToCart
-          product_id={productId.toString()}
-          product_title={name}
-          product_sub_title={description}
-          product_image_url={imgSrc}
-          product_current_price={currentPrice.toString()}
-          product_original_price={originalPrice.toString()}
+          product_id={product.id}
+          product_title={product.title}
+          product_sub_title={product.subTitle}
+          product_image_url={product.imageUrls && product.imageUrls[0]}
+          product_current_price={product.sellingPrice.toString()}
+          product_original_price={product.maximumRetailPrice.toString()}
         />
       </div>
     </div>

@@ -1,13 +1,13 @@
-import ContentRow from "@/app/(client)/_components/home/ContentRow";
 import ProductImageList from "@/component/product-image-list";
-import fetcher from "@/app/_lib/fetcher";
+import ContentRow from "@/app/(client)/_components/home/ContentRow";
+import prisma from "@/app/_lib/db";
 
 const Categories = async () => {
-  const data = await fetcher("/api/categories?populate=image").catch((e) => {});
+  const categories = await prisma.category.findMany();
 
   return (
     <ContentRow title="Shop our top categories">
-      <ProductImageList data={data} />
+      <ProductImageList categories={categories} />
     </ContentRow>
   );
 };
