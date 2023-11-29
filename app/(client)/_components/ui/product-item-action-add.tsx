@@ -53,7 +53,7 @@ const ProductItemAddToCart: React.FC<ProductItemAddToCartProps> = ({
   return (
     <Button
       variant="outline"
-      className="rounded-full w-full"
+      className="rounded-full w-full border-slate-500"
       onClick={handleAddToCart}
       loading={loading}
     >

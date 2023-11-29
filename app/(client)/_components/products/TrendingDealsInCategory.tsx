@@ -1,6 +1,6 @@
-import ProductItemList from "@/component/product-item-list";
-import ContentRow from "@/app/(client)/_components/home/ContentRow";
 import { Prisma } from "@prisma/client";
+import ContentRow from "@/app/(client)/_components/home/ContentRow";
+import ProductList from "./ProductsList";
 
 type Product = Prisma.ProductGetPayload<{
   include: {
@@ -18,7 +18,7 @@ const TrendingDealsInCategory: React.FC<TrendingDealsInCategoryProps> = ({
 }) => {
   return (
     <ContentRow title="Trending Deals In this Category">
-      <ProductItemList products={trendingProducts} />
+      <ProductList products={trendingProducts} />
     </ContentRow>
   );
 };
