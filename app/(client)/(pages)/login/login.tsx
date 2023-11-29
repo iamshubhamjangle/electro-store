@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { toast } from "react-hot-toast";
@@ -28,9 +30,13 @@ const Login: React.FC<any> = ({ searchParams }) => {
   };
 
   return (
-    <div className="max-w-md mx-auto my-20">
-      <div className="flex flex-col space-y-2 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">
+    <div className="max-w-md mx-auto my-20 h-[30rem] border p-5 rounded-md grid place-content-center bg-slate-900 shadow-xl">
+      <div className="flex flex-col space-y-2 text-center items-center">
+        <Link href={"/"} prefetch={false} className="pb-5">
+          <Image src={"/logo_light.png"} alt="logo" width={80} height={80} />
+        </Link>
+        <h1 className="text-2xl font-semibold">Welcome Back!</h1>
+        <h1 className="font-medium tracking-tight text-muted-foreground">
           Login to your account
         </h1>
       </div>
@@ -38,13 +44,13 @@ const Login: React.FC<any> = ({ searchParams }) => {
         <div className="mt-6">
           <Button
             type="button"
-            variant="outline"
+            variant="default"
             onClick={handleLoginWithGoogleOAuth}
             loading={loading}
-            className="border-primary text-primary hover:text-primary w-full"
+            className="w-full"
           >
             <svg
-              className="w-4 h-4 mr-2 text-primary"
+              className="w-4 h-4 mr-2"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
@@ -56,7 +62,7 @@ const Login: React.FC<any> = ({ searchParams }) => {
                 clipRule="evenodd"
               />
             </svg>
-            Sign in with Google
+            Continue with Google
           </Button>
         </div>
       </div>
