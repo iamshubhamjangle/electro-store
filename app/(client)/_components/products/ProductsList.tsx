@@ -1,30 +1,24 @@
 import ProductItem from "@/component/product-item";
+import { Product } from "@prisma/client";
 
 interface ProductListProps {
-  data: any;
+  products: Product[];
 }
 
-const ProductList: React.FC<ProductListProps> = ({ data }) => {
+const ProductList: React.FC<ProductListProps> = ({ products }) => {
   return (
-    <>
-      {data?.data?.map((product: any, idx: number) => {
+    <div className="flex flex-wrap gap-6 justify-center">
+      {products?.map((product) => {
         return (
           <ProductItem
-            key={idx}
-            productId={product?.id}
-            name={product?.attributes?.title}
-            description={product?.attributes?.description}
-            imgSrc={product?.attributes?.image?.data[0]?.attributes?.url}
-            rating={product?.attributes?.rating}
-            reviews={0}
-            currentPrice={product?.attributes?.currentPrice}
-            originalPrice={product?.attributes?.originalPrice}
+            key={product.id}
+            product={product}
             width={200}
             height={350}
           />
         );
       })}
-    </>
+    </div>
   );
 };
 

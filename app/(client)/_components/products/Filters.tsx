@@ -91,12 +91,12 @@ const Filters: React.FC<FiltersProps> = ({
       setter: setOffers,
       values: [
         {
-          value: "30",
-          placeholder: "30% off & above",
+          value: "ON_DEAL_30%",
+          placeholder: "30% off",
         },
         {
-          value: "60",
-          placeholder: "60% off & above",
+          value: "ON_DEAL_60%",
+          placeholder: "60% off",
         },
         {
           value: "clear",
@@ -142,7 +142,7 @@ const Filters: React.FC<FiltersProps> = ({
               onValueChange={(value) => handleChange(value, item.setter)}
               value={item.getter || undefined}
             >
-              <SelectTrigger className="rounded-full font-semibold bg-slate-200">
+              <SelectTrigger className="rounded-full font-semibold w-40">
                 <SelectValue placeholder={item.title} />
               </SelectTrigger>
               <SelectContent>

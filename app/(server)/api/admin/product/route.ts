@@ -101,3 +101,20 @@ export async function POST(req: NextRequest) {
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
+
+export async function GET(req: NextRequest) {
+  try {
+    const searchParams = req.nextUrl.searchParams;
+    console.log(
+      "-------------------searchParams----------------------",
+      searchParams
+    );
+    return new NextResponse("Success", { status: 200 });
+  } catch (error) {
+    console.error("<<< ERROR::GET::api/admin/product >>>", error);
+    if (error instanceof PrismaClientKnownRequestError) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
+}

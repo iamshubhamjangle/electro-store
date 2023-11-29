@@ -1,43 +1,24 @@
-"use client";
-
-import { useState, useEffect } from "react";
-
 import ProductItemList from "@/component/product-item-list";
 import ContentRow from "@/app/(client)/_components/home/ContentRow";
-import fetcher from "@/app/_lib/fetcher";
+import { Prisma } from "@prisma/client";
+
+type Product = Prisma.ProductGetPayload<{
+  include: {
+    category: true;
+    trait: true;
+  };
+}>;
 
 interface TrendingDealsInCategoryProps {
-  category: string | null;
+  trendingProducts: Product[];
 }
 
 const TrendingDealsInCategory: React.FC<TrendingDealsInCategoryProps> = ({
-  category,
+  trendingProducts,
 }) => {
-  const [data, setData] = useState<any>([]);
-
-  async function fetchData() {
-    let categoryFilter = "";
-    let trendingFilter = "&filters[traits][type][$eqi]=TRENDING";
-
-    if (category) {
-      categoryFilter = `&filters[category][name][$eqi]=${category}`;
-    }
-
-    const URL = `/api/products?populate=*${categoryFilter}${trendingFilter}`;
-
-    await fetcher(URL)
-      .then((data) => setData(data))
-      .catch((e) => {});
-  }
-
-  useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category]);
-
   return (
     <ContentRow title="Trending Deals In this Category">
-      <ProductItemList data={data} />
+      <ProductItemList products={trendingProducts} />
     </ContentRow>
   );
 };

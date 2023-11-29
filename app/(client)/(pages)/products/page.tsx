@@ -1,44 +1,16 @@
-"use client";
+import prisma from "@/app/_lib/db";
+import AllProductsPage from "@/app/(client)/_components/products/AllProductPage";
 
-import {
-  Filters,
-  HeroSectionForCategory,
-  Products,
-  TrendingDealsInCategory,
-} from "@/app/(client)/_components/products";
+const Page = async () => {
+  const products = await prisma.product.findMany({
+    include: {
+      category: true,
+      trait: true,
+    },
+  });
+  const categories = await prisma.category.findMany();
 
-import { useQueryState } from "next-usequerystate";
-
-const Page = () => {
-  const [category, setCategory] = useQueryState("category");
-  const [rating, setRating] = useQueryState("rating");
-  const [offers, setOffers] = useQueryState("offers");
-  const [sortby, setSortby] = useQueryState("sortby");
-
-  return (
-    <main className="container max-w-7xl">
-      <HeroSectionForCategory category={category} />
-      <div className="space-y-16 my-16">
-        <Filters
-          category={category}
-          setCategory={setCategory}
-          rating={rating}
-          setRating={setRating}
-          offers={offers}
-          setOffers={setOffers}
-          sortby={sortby}
-          setSortby={setSortby}
-        />
-        <Products
-          category={category}
-          rating={rating}
-          offers={offers}
-          sortby={sortby}
-        />
-        <TrendingDealsInCategory category={category} />
-      </div>
-    </main>
-  );
+  return <AllProductsPage products={products} categories={categories} />;
 };
 
 export default Page;
