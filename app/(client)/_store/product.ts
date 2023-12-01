@@ -22,6 +22,7 @@ const initialValueProduct: ProductFormType = {
   sellingPrice: "",
   maximumRetailPrice: "",
   rating: "",
+  traits: [],
 };
 
 export const useProductStore = create<ProductStore>((set) => ({
