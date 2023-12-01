@@ -1,17 +1,17 @@
+import { Product } from "@prisma/client";
 import { Separator } from "../ui/separator";
-import { CartItem as TCartItem } from "@prisma/client";
 
 interface PriceDetailsProps {
-  cartItems: TCartItem[];
+  cart: any;
 }
 
-const PriceDetails: React.FC<PriceDetailsProps> = ({ cartItems }) => {
+const PriceDetails: React.FC<PriceDetailsProps> = ({ cart }) => {
   let price = 0;
   let originalPrice = 0;
 
-  cartItems.map((item) => {
-    price += item.product_current_price;
-    originalPrice += item.product_original_price;
+  cart.products.map((item: Product) => {
+    price += item.sellingPrice;
+    originalPrice += item.maximumRetailPrice;
   });
 
   return (
