@@ -1,4 +1,3 @@
-- Bug: Discounted deals redirecting incorrectly
 - If uploaded image is removed. The upload limit is not updated.
 - Implement Admin panel access using scopes.
 - Click on the image should open it in enlarge window.
