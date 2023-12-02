@@ -19,7 +19,7 @@ const CartSummary = async () => {
   });
 
   // Cart is EMPTY
-  if (!cartProducts)
+  if (!cartProducts || cartProducts.length === 0)
     return (
       <div className="flex flex-col items-center my-12">
         <Image
