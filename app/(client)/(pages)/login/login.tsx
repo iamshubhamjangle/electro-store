@@ -22,7 +22,7 @@ const Login: React.FC<any> = ({ searchParams }) => {
       url.searchParams.delete("error");
       window.history.replaceState({}, document.title, url.toString());
     }
-  }, []);
+  }, [searchParams?.error]);
 
   const handleLoginWithGoogleOAuth = () => {
     setLoading(true);
