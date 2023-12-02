@@ -2,7 +2,7 @@ import Image from "next/image";
 import RemoveCartItem from "./cart-item-remove";
 
 interface cartItemsProps {
-  id: string;
+  cartProductId: string;
   product_id: string;
   product_title: string;
   product_sub_title: string;
@@ -13,7 +13,7 @@ interface cartItemsProps {
 }
 
 const CartItem: React.FC<cartItemsProps> = ({
-  id,
+  cartProductId,
   product_id,
   product_title,
   product_sub_title,
@@ -27,7 +27,7 @@ const CartItem: React.FC<cartItemsProps> = ({
       <div className="min-w-[100px] max-w-[100px] md:min-w-[200px] md:max-w-[200px]">
         <Image
           alt={product_title}
-          src={`${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}${product_image_url}`}
+          src={product_image_url}
           height={500}
           width={500}
           style={{ height: "auto", objectFit: "contain", position: "relative" }}
@@ -47,7 +47,7 @@ const CartItem: React.FC<cartItemsProps> = ({
             ₹{product_original_price}
           </span>
         </div>
-        <RemoveCartItem cart_item_id={id} />
+        <RemoveCartItem cartProductId={cartProductId} />
       </div>
       <div className="hidden md:flex gap-2 items-center">
         <span className="text-xl font-bold">₹{product_current_price}</span>

@@ -4,7 +4,7 @@ import prisma from "@/app/_lib/db";
 import { serverAuth } from "@/app/_lib/serverAuth";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
-type TCartPostBody = {
+export type TCartPostBody = {
   product_id: string;
   product_title: string;
   product_sub_title: string;
@@ -33,45 +33,42 @@ export async function POST(req: NextRequest) {
       !product_id ||
       !product_title ||
       !product_sub_title ||
-      !product_image_url ||
       !product_current_price ||
       !product_original_price
     ) {
       return new NextResponse("Missing Fields", { status: 400 });
     }
 
-    // Check if cartItem already exists
-    // const existingCartItem = await prisma.cart.findFirst({
-    //   where: {
-    //     product_id,
-    //     userId,
-    //   },
-    // });
+    // Check if the user has a cart
+    const existingCartProduct = await prisma.cartProduct.findFirst({
+      where: {
+        product_id: product_id,
+        userId: userId,
+      },
+    });
 
-    // if (existingCartItem) {
-    //   // If exist, increment the quantity
-    //   await prisma.cart.update({
-    //     data: {
-    //       : existingCartItem.product_quantity + 1,
-    //     },
-    //     where: {
-    //       id: existingCartItem.id,
-    //     },
-    //   });
-    // } else {
-    //   // else, create new cartItem entry
-    //   await prisma.cartItem.create({
-    //     data: {
-    //       product_id,
-    //       product_title,
-    //       product_sub_title,
-    //       product_image_url,
-    //       product_current_price: parseInt(product_current_price),
-    //       product_original_price: parseInt(product_original_price),
-    //       userId,
-    //     },
-    //   });
-    // }
+    if (existingCartProduct) {
+      await prisma.cartProduct.update({
+        data: {
+          product_quantity: existingCartProduct.product_quantity + 1,
+        },
+        where: {
+          id: existingCartProduct.id,
+        },
+      });
+    } else {
+      await prisma.cartProduct.create({
+        data: {
+          product_id,
+          product_title,
+          product_sub_title,
+          product_current_price: parseInt(product_current_price),
+          product_original_price: parseInt(product_original_price),
+          product_image_url,
+          userId,
+        },
+      });
+    }
 
     return new NextResponse("Successfully Added/Updated Cart");
   } catch (error) {
@@ -83,32 +80,29 @@ export async function POST(req: NextRequest) {
   }
 }
 
-type TCartDeleteBody = {
-  cart_item_id: string;
+export type TCartDeleteBody = {
+  cartProductId: string;
 };
 
 export async function DELETE(req: NextRequest) {
-  console.log("DELETING");
   try {
     const session = await serverAuth();
     if (!session) return new NextResponse("Unauthorized", { status: 401 });
     const userId = session.user?.id;
 
     const body = await req.json();
-    const { cart_item_id }: TCartDeleteBody = body;
+    const { cartProductId }: TCartDeleteBody = body;
 
-    if (!cart_item_id) {
+    if (!cartProductId) {
       return new NextResponse("Missing Fields", { status: 400 });
     }
 
-    await prisma.cart.delete({
+    await prisma.cartProduct.delete({
       where: {
-        id: cart_item_id,
+        id: cartProductId,
         userId,
       },
     });
-
-    console.log("ITEM DELETED");
 
     return new NextResponse("Successfully Deleted Cart Item");
   } catch (error) {

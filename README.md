@@ -1,3 +1,4 @@
+- Bug: Discounted deals redirecting incorrectly
 - If uploaded image is removed. The upload limit is not updated.
 - Implement Admin panel access using scopes.
 - Click on the image should open it in enlarge window.
@@ -21,6 +22,17 @@ To learn more about Next.js, take a look at the following resources:
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Shadcn Documentation](https://ui.shadcn.com/docs) - learn about Shadcn UI library.
 - [NextAuth](https://next-auth.js.org/getting-started/introduction) - Authentication Library for Next.js
+
+## Deployment
+
+```
+// Add one of the below:
+"scripts": {
+  "postinstall": "prisma generate"
+}
+or
+prisma generate && prisma migrate deploy && next build
+```
 
 ## Adding Next Auth Prisma
 

@@ -12,17 +12,14 @@ const CartSummary = async () => {
   if (!userId) return <div>You are not logged in!</div>;
 
   // Fetch Cart Items
-  const cart = await prisma.cart.findMany({
+  const cartProducts = await prisma.cartProduct.findMany({
     where: {
       userId,
-    },
-    include: {
-      products: true,
     },
   });
 
   // Cart is EMPTY
-  if (cart && cart.length === 0)
+  if (!cartProducts)
     return (
       <div className="flex flex-col items-center my-12">
         <Image
@@ -41,8 +38,8 @@ const CartSummary = async () => {
   // Cart is NOT empty
   return (
     <div className="space-y-10">
-      <CartItemList cart={cart} />
-      <PriceDetails cart={cart} />
+      <CartItemList cartProducts={cartProducts} />
+      <PriceDetails cartProducts={cartProducts} />
       <PlaceOrder />
     </div>
   );

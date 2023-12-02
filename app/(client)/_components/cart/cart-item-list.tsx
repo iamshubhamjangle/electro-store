@@ -1,27 +1,25 @@
-import { Prisma, Product } from "@prisma/client";
+import { CartProduct } from "@prisma/client";
 import CartItem from "./cart-item";
 
 interface CartItemListProps {
-  cart: any;
+  cartProducts: CartProduct[];
 }
 
-const CartItemList: React.FC<CartItemListProps> = ({ cart }) => {
+const CartItemList: React.FC<CartItemListProps> = ({ cartProducts }) => {
   return (
     <div className="space-y-6">
-      {cart.products.map((item: Product) => {
+      {cartProducts.map((item) => {
         return (
           <CartItem
-            key={cart.id}
-            id={cart.id}
-            product_id={item.id}
-            product_title={item.title}
-            product_sub_title={item.subTitle}
-            product_image_url={
-              item.imageUrls.length > 0 ? item.imageUrls[0] : ""
-            }
-            product_quantity={1}
-            product_current_price={item.sellingPrice}
-            product_original_price={item.maximumRetailPrice}
+            key={item.id}
+            cartProductId={item.id}
+            product_id={item.product_id}
+            product_title={item.product_title}
+            product_sub_title={item.product_sub_title}
+            product_image_url={item.product_image_url}
+            product_quantity={item.product_quantity}
+            product_current_price={item.product_current_price}
+            product_original_price={item.product_original_price}
           />
         );
       })}

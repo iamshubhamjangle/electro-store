@@ -4,12 +4,9 @@ import axios from "axios";
 import { Button } from "@/component/button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { TCartDeleteBody } from "@/app/(server)/api/cart/route";
 
-interface RemoveCartItemProps {
-  cart_item_id: string;
-}
-
-const RemoveCartItem: React.FC<RemoveCartItemProps> = ({ cart_item_id }) => {
+const RemoveCartItem: React.FC<TCartDeleteBody> = ({ cartProductId }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -18,7 +15,7 @@ const RemoveCartItem: React.FC<RemoveCartItemProps> = ({ cart_item_id }) => {
     await axios
       .delete("/api/cart", {
         data: {
-          cart_item_id,
+          cartProductId,
         },
       })
       .then(() => router.refresh())

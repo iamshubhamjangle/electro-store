@@ -7,7 +7,7 @@ const MyCart = async ({ title, Icon }: any) => {
   const userId = session?.user.id;
 
   const numberOfCartItem = userId
-    ? await prisma.cart.count({
+    ? await prisma.cartProduct.count({
         where: {
           userId,
         },

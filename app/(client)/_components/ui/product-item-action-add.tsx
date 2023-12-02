@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { ShoppingCart } from "lucide-react";
 
 import { Button } from "./button";
+import { TCartPostBody } from "@/app/(server)/api/cart/route";
 
 interface ProductItemAddToCartProps {
   product_id: string;
@@ -31,7 +32,7 @@ const ProductItemAddToCart: React.FC<ProductItemAddToCartProps> = ({
   const handleAddToCart = () => {
     setLoading(true);
 
-    const body = {
+    const body: TCartPostBody = {
       product_id,
       product_title,
       product_sub_title,
